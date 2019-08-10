@@ -18,7 +18,7 @@ the folder structure in this repository is kept, and data is put where it should
 │   └── pretrained\
 └── README.md\
 ## data/
-Contains datafiles used when analysing
+Contains datafiles for analysis.\
 ├── real - Real data from scintillator experiments. Not provided.\
 ├── sample - Simulated sample data. Provided.\
 └── simulated - Simulated data. Not provided.\
