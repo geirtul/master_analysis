@@ -26,6 +26,11 @@ Contains datafiles used when analysing
 As the structure in the data folder suggests, the different types of data are
 kept in different folders. The sample data folder already contains sample data.
 
+### Sample data
+CeBr10kSingle are 10,000 rows of data and labels for single interactions in the detector\
+CeBr10k_1.txt is 10,000 rows of data and labels with a mix of single interactions and double interactions\
+CeBr10.txt is a small file I use which contains 10 single interactions.\
+
 ## notebooks/
 All notebooks used in the analysis work.\
 ├── classification - classifying single and double events\
