@@ -50,6 +50,7 @@ kiwisolver==1.1.0
 Mako==1.0.12.dev0
 Markdown==3.1.1
 MarkupSafe==1.1.1
+-e git+git@github.com:geirtul/thesis_scripts.git@8736e96323f8b37510d55614091f78cecba1ff35#egg=master_data_functions&subdirectory=data_functions
 matplotlib==3.1.1
 mistune==0.8.4
 nbconvert==5.5.0
