@@ -19,7 +19,6 @@ Keras-Applications==1.0.8
 Keras-Preprocessing==1.1.0
 kiwisolver==1.1.0
 Markdown==3.1.1
--e git+git@github.com:geirtul/thesis_analysis.git@d9c648e9fa685cf19bebef7203bf68af3d8dcf16#egg=master_data_functions
 matplotlib==3.1.1
 numpy==1.17.0
 parso==0.5.1
