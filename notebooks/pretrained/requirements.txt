@@ -19,11 +19,14 @@ Keras-Applications==1.0.8
 Keras-Preprocessing==1.1.0
 kiwisolver==1.1.0
 Markdown==3.1.1
+-e git+git@github.com:geirtul/master_scripts.git@86148d342662ef10a37f661c8743e728e007a18c#egg=master_data_functions&subdirectory=data_functions
+-e git+git@github.com:geirtul/master_scripts.git@86148d342662ef10a37f661c8743e728e007a18c#egg=master_models&subdirectory=models
 matplotlib==3.1.1
 numpy==1.17.0
 parso==0.5.1
 pexpect==4.7.0
 pickleshare==0.7.5
+pkg-resources==0.0.0
 prompt-toolkit==2.0.9
 protobuf==3.9.1
 ptyprocess==0.6.0
@@ -36,10 +39,12 @@ scikit-learn==0.21.3
 scipy==1.3.1
 six==1.12.0
 sklearn==0.0
+tb-nightly==1.14.0a20190603
 tensorboard==1.14.0
-tensorflow==1.14.0
 tensorflow-estimator==1.14.0
+tensorflow-gpu==2.0.0b1
 termcolor==1.1.0
+tf-estimator-nightly==1.14.0.dev2019060501
 tornado==6.0.3
 traitlets==4.3.2
 wcwidth==0.1.7
