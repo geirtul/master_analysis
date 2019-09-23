@@ -1,0 +1,105 @@
+\documentclass[12pt, notitlepage]{article}
+%\usepackage[backend=biber]{biblatex}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{caption}
+%\usepackage{subcaption}
+\usepackage{commath}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{dirtytalk}
+\usepackage{listings}
+\usepackage{wasysym}
+\usepackage{float}
+\usepackage{listings}
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage{subfig}
+
+% Packages from derivations_fullproblem.tex
+\usepackage[squaren]{SIunits}
+\usepackage{a4wide}
+\usepackage{array}
+\usepackage{cancel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{titling}
+
+% Parameters for displaying code.
+\lstset{language=python}
+\lstset{basicstyle=\ttfamily\small}
+\lstset{frame=single}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+
+% Define new commands
+\newcommand{\expect}[1]{\langle #1 \rangle}
+% Add bibliography
+\begin{document}
+
+
+\title{Summary - Classifying Events in Scintillator Data with Pre-Trained Neural Networks}
+\author{Geir Tore Ulvik}
+\maketitle
+\section{Introduction}
+A short summary of current work on using pre-trained neural networks to classify
+single and double events in scintillator data.
+
+\section{What are pre-trained networks and how do we use them?}
+As the name suggests a pre-trained network is a network that has already
+been trained, usually on very large amounts of data over a significant amount
+of time. This is the case for the networks explored in this work. The networks
+have all been trained on the "ImageNet" database and are on the cutting edge in
+computer vision. They have also been analyzed extensively, increasing the amount
+of insight in the learning process.
+
+But we're not interested in classifying ImageNet data, we have our own data,
+so how can we use the power of these networks for our own purposes?
+The answer is \textbf{feature extraction}. When feeding an image forward
+through the trained network, the various filters (or "kernels") react to different features
+of the image, like edges or lines, general shapes etc. What we end up with on the other side
+of the network is a "feature representation" of the input image. Hopefully, an input image
+of say a cat and a car will produce significantly different feature representations, allowing
+for classification. In our case we desire that the feature representations for single and
+double events are different. This is the first thing we test when looking at which networks
+might work for us.
+
+\section{Data preparation}
+In order to use the pre-trained networks, our data needs to be prepared to fit some requirements.
+
+
+
+\section{Framework}
+Python3, Tensorflow with Keras API for easy building of models.
+
+\section{Networks}
+\begin{itemize}
+    \item DenseNet121
+    \item DenseNet169
+    \item DenseNet201
+    \item InceptionResNetV2
+    \item InceptionV3
+    \item MobileNet
+    \item MobileNetV2
+    \item NASNetLarge
+    \item NASNetMobile
+    \item ResNet50
+    \item VGG16
+    \item VGG19
+    \item Xception
+\end{itemize}
+\section{Feature Extraction and Analysis}
+\section{Classification}
+%\appendix
+%\bibliographystyle{unsrt}
+%\bibliography{bibliography}
+\end{document}
