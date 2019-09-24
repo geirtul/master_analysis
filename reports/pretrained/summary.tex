@@ -43,6 +43,26 @@
 
 % Define new commands
 \newcommand{\expect}[1]{\langle #1 \rangle}
+\newcommand{\dd}[1]{\ \text{d}#1}
+\newcommand{\f}[2]{\frac{#1}{#2}} 
+\newcommand{\tf}[2]{\tfrac{#1}{#2}}
+\newcommand{\beq}{\begin{equation*}}
+\newcommand{\eeq}{\end{equation*}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1 \rangle}
+\newcommand{\braket}[2]{\langle #1 | #2 \rangle}
+\newcommand{\av}[1]{\left| #1 \right|}
+\newcommand{\op}[1]{\widehat{#1}}
+\newcommand{\braopket}[3]{\langle #1 | \op{#2} | #3 \rangle}
+\newcommand{\ketbra}[2]{\ket{#1}\bra{#2}}
+\newcommand{\pp}[1]{\frac{\partial}{\partial #1}}
+\newcommand{\ppn}[1]{\frac{\partial^2}{\partial #1^2}}
+\newcommand{\up}{\left|\uparrow\rangle\right.}
+\newcommand{\down}{\left|\downarrow\rangle\right.}
+\newcommand{\updown}{\left|\uparrow\downarrow\rangle\right.}
+\newcommand{\downup}{\left|\downarrow\uparrow\rangle\right.}
+\newcommand{\ua}{\uparrow}
+\newcommand{\da}{\downarrow}
 % Add bibliography
 \begin{document}
 
@@ -75,17 +95,33 @@ might work for us.
 
 \section{Data preparation}
 In order to use the pre-trained networks, our data needs to be prepared to fit some requirements.
-
+\subsection{Shape and Size}
+The pre-trained networks are trained on RGB color images with a shape of $(224, 224, 3)$
+corresponding to $(p_x, p_y, channels)$. Our data is much smaller, $(16, 16, 1)$. 
+We solve the number of channels by concatenating our image data to itself, giving us 3 identical channels. 
+Additionally, for the networks to accept our data we need to replace the input layer of each network,
+with one that accepts our image size.
+\subsection{Normalization of pixel values}
+To reduce the risk of exploding and/or vanishing gradients, pixel values are commonly
+normalized to $[0, 1]$ or to $[-1, 1]$ (with zero-mean). Here we have opted for a min-max scaling to the $[0, 1]$ interval.
+The minimum and maximum pixel values are fetched for the entire dataset, such that intensity differences
+between images are preserved. Min-max scaling is calculated as
+\begin{equation}
+    \text{scaled image} = \f{\text{image} - \mu_{image}}{I_{max} - I_{min}},
+\end{equation}
+where $I_{max}$ and $I_{min}$ refer to the maximum and minimum pixel intensity for the dataset.
 
 
 \section{Framework}
-Python3, Tensorflow with Keras API for easy building of models.
-
-\section{Networks}
 \begin{itemize}
-    \item DenseNet121
-    \item DenseNet169
-    \item DenseNet201
+    \item Python3
+    \item TensorFlow (with Keras API)
+    \item Scikit-Learn
+\end{itemize}
+\section{Networks}
+The following networks have been explored to some degree.
+\begin{itemize}
+    \item DenseNet\{121, 169, 201\}
     \item InceptionResNetV2
     \item InceptionV3
     \item MobileNet
@@ -97,7 +133,73 @@ Python3, Tensorflow with Keras API for easy building of models.
     \item VGG19
     \item Xception
 \end{itemize}
-\section{Feature Extraction and Analysis}
+\section{Feature Extraction}
+To compare the extracted feature representations and find out if they may allow for classification,
+a Kolmogorov-Smirnov(KS) two-sample test was performed. The test compares each feature's distribution
+for single events and double events. The same test is also performed for single events and double events 
+where the relative distance between events is $< 3mm$. The output p-value of the KS two-sample test
+indicates whether or not we can reject the null hypothesis. The null hypothesis for one feature in this 
+case is that for both single and double events the feature is drawn from the same underlying distribution.
+For p-values lower than 0.01 we can generally reject the null-hypothesis. 
+
+However, keep in mind that even if the feature distributions are different it's not a guarantee that 
+classification will work, but it may indicate which networks won't perform well.
+\subsection{Results}
+The tables \ref{tab:features} and \ref{tab:features-close} show the number of features for each network,
+and the ratio of features that have a p-value below certain thresholds corresponding to different levels
+of significance. From the results it would seem that MobileNet and the NASNet variants may perform worse
+than the rest of the networks, and VGG16 and VGG19 may follow the same trend. At the very least it seems
+reasonable to bring each network with us in the next stages. We could perhaps discard MobileNet, but it
+could be useful to keep as a sort of benchmark. We also don't know how many features need to be different
+in order to make classification possible, and while the ratios for MobileNet are low, there's still
+$0.227\cdot 2048 ~ 465$ different features, which is actually more features than MobileNetV2 and the Inception 
+variants.
+\begin{tabular}{l|c|r|r|r}
+    \hline
+     Network           &   features &   ratio $p < 0.01$ &   ratio $p < 0.005$ &   ratio $p < 0.001$ \\
+    \hline
+     DenseNet121       &            512 &         1.00  &          1.00   &          1.00   \\
+     DenseNet169       &            512 &         1.00  &          1.00   &          1.00   \\
+     DenseNet201       &            512 &         1.00  &          1.00   &          1.00   \\
+     InceptionResNetV2 &            320 &         0.969 &          0.969  &          0.966  \\
+     InceptionV3       &            320 &         0.981 &          0.981  &          0.981  \\
+     MobileNet         &           2048 &         0.227 &          0.227  &          0.227  \\
+     MobileNetV2       &            384 &         1.00  &          1.00   &          1.00   \\
+     NASNetLarge       &           2058 &         0.510 &          0.510  &          0.510  \\
+     NASNetMobile      &            539 &         0.510 &          0.510  &          0.510  \\
+     ResNet50          &           4096 &         1.00  &          1.00   &          1.00   \\
+     VGG16             &            512 &         0.633 &          0.633  &          0.627  \\
+     VGG19             &            512 &         0.652 &          0.652  &          0.652  \\
+     Xception          &           3200 &         1.00  &          1.00   &          1.00   \\
+    \hline
+    \caption{Comparison of feature distributions for single events and double events for all networks.
+    The dataset is balanced, containing 100000 of each event type.}
+    \label{tab:features}
+\end{tabular}
+
+\begin{tabular}{lrrrr}
+    \hline
+     Network           &   features &   ratio $p < 0.01$ &   ratio $p < 0.005$ &   ratio $p < 0.001$ \\
+    \hline
+     DenseNet121       &            512 &         1.00  &          1.00  &          1.00  \\
+     DenseNet169       &            512 &         0.998 &          0.998 &          0.998 \\
+     DenseNet201       &            512 &         1.00  &          1.00  &          1.00  \\
+     InceptionResNetV2 &            320 &         0.969 &          0.969 &          0.966 \\
+     InceptionV3       &            320 &         0.972 &          0.969 &          0.962 \\
+     MobileNet         &           2048 &         0.222 &          0.221 &          0.219 \\
+     MobileNetV2       &            384 &         1.00  &          1.00  &          1.00  \\
+     NASNetLarge       &           2058 &         0.481 &          0.474 &          0.457 \\
+     NASNetMobile      &            539 &         0.458 &          0.445 &          0.419 \\
+     ResNet50          &           4096 &         1.00  &          0.999 &          0.999 \\
+     VGG16             &            512 &         0.602 &          0.599 &          0.598 \\
+     VGG19             &            512 &         0.643 &          0.643 &          0.639 \\
+     Xception          &           3200 &         1.00  &          1.00  &          0.999 \\
+    \hline
+    \caption{Comparison of feature distributions for single events and double events with relative distance
+	between events $< 3mm$. The dataset contain 100000 single events and 11006 double events.}
+    \label{tab:features-close}
+
+\end{tabular}
 \section{Classification}
 %\appendix
 %\bibliographystyle{unsrt}
