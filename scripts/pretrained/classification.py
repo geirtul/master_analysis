@@ -45,14 +45,5 @@ for net, depth in pretrained_models.items():
         depth = "full"
     features_filename = net + "_d" + str(depth) + "_" + str(images.shape[0]) + ".npy"
     pretrained_features = load_feature_representation(features_filename)
-    # Remove nan values from pretrained_features (and remove labels which produces them)
-    nan_indices = []
-    for i in range(pretrained_features.shape[0]):
-        if np.isnan(pretrained_features[i,:]).any():
-            nan_indices.append(i)
-    if len(nan_indices) > 0:
-        print(net, "has {} nan indices".format(len(nan_indices)))
-        print(nan_indices)
-
 
     

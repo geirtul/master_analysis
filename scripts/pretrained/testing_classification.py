@@ -1,0 +1,167 @@
+# Imports
+import numpy as np
+import tensorflow as tf
+import sys
+import matplotlib.pyplot as plt
+from master_data_functions.functions import *
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Activation
+from sklearn.model_selection import train_test_split, StratifiedKFold
+
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+
+
+# Load existing data. The feature_rep functions just use np storage.
+# Image are allready reshaped to (16, 16, 3) here
+images = load_feature_representation("images_200k.npy")
+energies = load_feature_representation("energies_200k.npy")
+positions = load_feature_representation("positions_200k.npy")
+labels = load_feature_representation("labels_200k.npy")
+
+n_classes = len(np.unique(labels))
+
+# Keys: model names, Values: depth to compare at.
+pretrained_models = {
+    #"DenseNet121":None,
+    #"DenseNet169":None,
+    "DenseNet201":None,
+    #"InceptionResNetV2":None,
+    #"InceptionV3":None,
+    #"MobileNet":None,
+    #"MobileNetV2":None,
+    #"NASNetLarge":None,
+    #"NASNetMobile":None,
+    #"ResNet50":None,
+    "VGG16":None,
+    #"VGG19":None,
+    #"Xception":None,
+    }
+
+def create_dense_model(input_shape):
+    """ Create the same dense model that classifies on every pretrained net
+
+    param input_shape: the shape of the input features
+
+    return: the compiled model, ready for training etc.
+    """
+ 
+    model = Sequential()
+    model.add(Dense(512, input_shape=pretrained_features.shape[1:]))
+    model.add(Activation('relu'))
+    model.add(Dense(512))
+    model.add(Activation('relu'))
+    model.add(Dense(2, activation='softmax'))
+
+    model.compile(optimizer='adam',
+                  loss='binary_crossentropy',
+                  metrics=['accuracy'])
+
+    return model
+
+def calc_kfold_accuracies(acc_list):
+    """ Given a list of accuracies from a history object from model.fit,
+    calculate mean accuracy, and get min and max accuracies for runs for
+    one network.
+    """
+
+    # Find the top epoch acc for each fold
+    best = []
+    for fold in acc_list:
+        val = np.asarray(fold)
+        best.append(np.amax(val))
+    best = np.asarray(best)
+
+    # Calculate max, min, and mean accuracy
+    acc_min = np.amin(best)
+    acc_max = np.amax(best)
+    acc_mean = np.mean(best)
+
+    return [acc_min, acc_max, acc_mean]
+
+def save_dense_model(model, filename):
+    """ Use tensorflow to save a model instance so that it can be loaded
+    and used for prediction at a later time.
+    """
+    OUTPUT_PATH = "../../data/output/models/"
+    tf.saved_model.save(mode, OUTPUT_PATH + filename)
+
+
+
+# Params for k-fold cross-validation
+k_splits = 5
+k_shuffle = True
+epochs = 5
+batch_size = 32
+kfold_labels = labels.argmax(axis=-1) # StratifiedKFold doesn't take one-hot
+
+# Store accuracy for each fold for all models
+k_fold_results = {}
+for key in pretrained_models.keys():
+    k_fold_results[key] = []
+
+# Store indices for double events that are never classified correctly by
+# any model
+never_correct = []
+
+
+for net, depth in pretrained_models.items():
+    print("Running for:", net)
+
+    tmp_never_correct = []
+    
+    # Load features
+    if depth is None:
+        depth = "full"
+    features_filename = net + "_d" + str(depth) + "_" + str(images.shape[0]) + ".npy"
+    pretrained_features = load_feature_representation(features_filename)
+    
+    # Create KFold data generator
+    skf = StratifiedKFold(n_splits=k_splits, shuffle=k_shuffle)
+    
+    # Run k-fold cv
+    for train_index, test_index in skf.split(pretrained_features, kfold_labels):
+        single_indices, double_indices, close_indices = event_indices(positions[test_index])
+        
+        # Build model
+        model = create_dense_model(pretrained_features.shape[1:])
+
+        # Train model
+        history = model.fit(
+            pretrained_features[train_index], 
+            labels[train_index], 
+            epochs=epochs, 
+            batch_size=batch_size,
+            validation_data=(pretrained_features[test_index], labels[test_index])
+            )
+        
+        # Store the accuracy
+        k_fold_results[net].append(history.history['val_accuracy'])
+
+        # Get indices for wrongly classified double events
+        tmp_pred = model.predict(pretrained_features[test_index])
+        tmp_results = tmp_pred.argmax(axis=-1).reshape(tmp_pred.shape[0], 1)
+        wrong_close = np.where(tmp_results[close_indices] == 0)[0]
+
+        for el in wrong_close: 
+            tmp_never_correct.append(el)
+
+    # Set never_correct to the common elements of wrong_close events
+    # and previous wrong_close events
+    if len(never_correct) == 0:
+        never_correct = set(tmp_never_correct)
+    else:
+        never_correct = never_correct.intersection(set(tmp_never_correct))
+
+# Write results to file
+with open("kfold_results.txt", "w") as resultfile:
+    for key in k_fold_results.keys():
+        accs = calc_kfold_accuracies(k_fold_results[key])
+        resultfile.write("{}: acc_min = {:.2f} | acc_max = {:.2f} | acc_mean = {:.2f}".format(
+            key, accs[0], accs[1], accs[2])
+            )
+
+# Write never_correct to file for later exploration
+with open("never_correct_indices.txt", "w") as indexfile:
+    for index in never_correct:
+        indexfile.write(str(index) + "\n")
+
