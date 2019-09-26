@@ -71,7 +71,7 @@ def save_model(model, filename):
 pretrained_models = {
     #"DenseNet121":None,
     #"DenseNet169":None,
-    #"DenseNet201":None,
+    "DenseNet201":None,
     #"InceptionResNetV2":None,
     #"InceptionV3":None,
     #"MobileNet":None,
@@ -86,9 +86,9 @@ pretrained_models = {
 
 
 # Params for k-fold cross-validation
-k_splits = 5
+k_splits = 3
 k_shuffle = True
-epochs = 5
+epochs = 1
 batch_size = 32
 kfold_labels = labels.argmax(axis=-1) # StratifiedKFold doesn't take one-hot
 
@@ -151,7 +151,9 @@ for net, depth in pretrained_models.items():
         # Get indices for wrongly classified double events
         tmp_pred = model.predict(pretrained_features[test_index])
         tmp_results = tmp_pred.argmax(axis=-1).reshape(tmp_pred.shape[0], 1)
-        wrong_close = np.where(tmp_results[close_indices] == 0)[0]
+        wrong_close = test_index[close_indices][np.where(tmp_results[close_indices] == 0)[0]]
+
+
 
         # Add wrongly classified double event indices to tmp storage
         tmp_never_correct = tmp_never_correct + wrong_close.tolist()
@@ -168,7 +170,7 @@ for net, depth in pretrained_models.items():
 with open("kfold_results.txt", "w") as resultfile:
     for key in k_fold_results.keys():
         accs = calc_kfold_accuracies(k_fold_results[key])
-        resultfile.write("{}: acc_min = {:.2f} | acc_max = {:.2f} | acc_mean = {:.2f}".format(
+        resultfile.write("{}: acc_min = {:.2f} | acc_max = {:.2f} | acc_mean = {:.2f}\n".format(
             key, accs[0], accs[1], accs[2])
             )
 
