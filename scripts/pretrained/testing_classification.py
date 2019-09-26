@@ -8,7 +8,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation
 from sklearn.model_selection import train_test_split, StratifiedKFold
 
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
 # Load existing data. The feature_rep functions just use np storage.
@@ -20,22 +19,6 @@ labels = load_feature_representation("labels_200k.npy")
 
 n_classes = len(np.unique(labels))
 
-# Keys: model names, Values: depth to compare at.
-pretrained_models = {
-    #"DenseNet121":None,
-    #"DenseNet169":None,
-    "DenseNet201":None,
-    #"InceptionResNetV2":None,
-    #"InceptionV3":None,
-    #"MobileNet":None,
-    #"MobileNetV2":None,
-    #"NASNetLarge":None,
-    #"NASNetMobile":None,
-    #"ResNet50":None,
-    "VGG16":None,
-    #"VGG19":None,
-    #"Xception":None,
-    }
 
 def create_dense_model(input_shape):
     """ Create the same dense model that classifies on every pretrained net
@@ -78,13 +61,28 @@ def calc_kfold_accuracies(acc_list):
 
     return [acc_min, acc_max, acc_mean]
 
-def save_dense_model(model, filename):
+def save_model(model, filename):
     """ Use tensorflow to save a model instance so that it can be loaded
     and used for prediction at a later time.
     """
-    OUTPUT_PATH = "../../data/output/models/"
     tf.saved_model.save(mode, OUTPUT_PATH + filename)
 
+# Keys: model names, Values: depth to compare at.
+pretrained_models = {
+    #"DenseNet121":None,
+    #"DenseNet169":None,
+    #"DenseNet201":None,
+    #"InceptionResNetV2":None,
+    #"InceptionV3":None,
+    #"MobileNet":None,
+    #"MobileNetV2":None,
+    #"NASNetLarge":None,
+    #"NASNetMobile":None,
+    #"ResNet50":None,
+    "VGG16":None,
+    #"VGG19":None,
+    #"Xception":None,
+    }
 
 
 # Params for k-fold cross-validation
@@ -103,11 +101,15 @@ for key in pretrained_models.keys():
 # any model
 never_correct = []
 
+OUTPUT_PATH = "../../data/output/models/"
 
 for net, depth in pretrained_models.items():
     print("Running for:", net)
 
     tmp_never_correct = []
+
+    # variables for selecting best model for saving
+    curr_max_acc = 0
     
     # Load features
     if depth is None:
@@ -125,13 +127,22 @@ for net, depth in pretrained_models.items():
         # Build model
         model = create_dense_model(pretrained_features.shape[1:])
 
+        # Setup callback for saving models
+        fpath = OUTPUT_PATH + net + "-{val_accuracy:.2f}.hdf5"
+        cb = tf.keras.callbacks.ModelCheckpoint(
+                filepath=fpath, 
+                monitor='val_accuracy', 
+                save_best_only=True
+                )
+
         # Train model
         history = model.fit(
             pretrained_features[train_index], 
             labels[train_index], 
             epochs=epochs, 
             batch_size=batch_size,
-            validation_data=(pretrained_features[test_index], labels[test_index])
+            validation_data=(pretrained_features[test_index], labels[test_index]),
+            callbacks=[cb]
             )
         
         # Store the accuracy
@@ -142,8 +153,9 @@ for net, depth in pretrained_models.items():
         tmp_results = tmp_pred.argmax(axis=-1).reshape(tmp_pred.shape[0], 1)
         wrong_close = np.where(tmp_results[close_indices] == 0)[0]
 
-        for el in wrong_close: 
-            tmp_never_correct.append(el)
+        # Add wrongly classified double event indices to tmp storage
+        tmp_never_correct = tmp_never_correct + wrong_close.tolist()
+
 
     # Set never_correct to the common elements of wrong_close events
     # and previous wrong_close events
