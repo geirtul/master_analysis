@@ -61,7 +61,7 @@ def calc_kfold_accuracies(acc_list):
 
     return [acc_min, acc_max, acc_mean]
 
-def save_model(model, filename):
+def load_model(model, filename):
     """ Use tensorflow to save a model instance so that it can be loaded
     and used for prediction at a later time.
     """
@@ -69,26 +69,26 @@ def save_model(model, filename):
 
 # Keys: model names, Values: depth to compare at.
 pretrained_models = {
-    #"DenseNet121":None,
-    #"DenseNet169":None,
+    "DenseNet121":None,
+    "DenseNet169":None,
     "DenseNet201":None,
-    #"InceptionResNetV2":None,
-    #"InceptionV3":None,
-    #"MobileNet":None,
-    #"MobileNetV2":None,
-    #"NASNetLarge":None,
-    #"NASNetMobile":None,
-    #"ResNet50":None,
+    "InceptionResNetV2":None,
+    "InceptionV3":None,
+    "MobileNet":None,
+    "MobileNetV2":None,
+    "NASNetLarge":None,
+    "NASNetMobile":None,
+    "ResNet50":None,
     "VGG16":None,
-    #"VGG19":None,
-    #"Xception":None,
+    "VGG19":None,
+    "Xception":None,
     }
 
 
 # Params for k-fold cross-validation
-k_splits = 3
+k_splits = 5
 k_shuffle = True
-epochs = 1
+epochs = 5
 batch_size = 32
 kfold_labels = labels.argmax(axis=-1) # StratifiedKFold doesn't take one-hot
 
@@ -158,6 +158,13 @@ for net, depth in pretrained_models.items():
         # Add wrongly classified double event indices to tmp storage
         tmp_never_correct = tmp_never_correct + wrong_close.tolist()
 
+        # Delete models and temporary arrays to free memory
+        del(model)
+        del(cb)
+        del(history)
+        del(tmp_pred)
+        del(tmp_results)
+
 
     # Set never_correct to the common elements of wrong_close events
     # and previous wrong_close events
@@ -166,6 +173,8 @@ for net, depth in pretrained_models.items():
     else:
         never_correct = never_correct.intersection(set(tmp_never_correct))
 
+    # Delete pretrained features before loading new ones
+    del(pretrained_features)
 # Write results to file
 with open("kfold_results.txt", "w") as resultfile:
     for key in k_fold_results.keys():
