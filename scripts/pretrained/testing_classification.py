@@ -12,11 +12,13 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 
 # Load existing data. The feature_rep functions just use np storage.
 # Image are allready reshaped to (16, 16, 3) here
-images = load_feature_representation("images_200k.npy")
-energies = load_feature_representation("energies_200k.npy")
-positions = load_feature_representation("positions_200k.npy")
-labels = load_feature_representation("labels_200k.npy")
+images = load_feature_representation("images__noscale_200k.npy")
+energies = load_feature_representation("energies__noscale_200k.npy")
+positions = load_feature_representation("positions__noscale_200k.npy")
+labels = load_feature_representation("labels__noscale_200k.npy")
 
+images = normalize_image_data(images)
+images = np.concatenate((images, images, image), axis=3)
 n_classes = len(np.unique(labels))
 
 
@@ -114,7 +116,7 @@ for net, depth in pretrained_models.items():
     # Load features
     if depth is None:
         depth = "full"
-    features_filename = net + "_d" + str(depth) + "_" + str(images.shape[0]) + ".npy"
+    features_filename = net + "_d" + str(depth) + "_" + str(images.shape[0]) + "_new_" + ".npy"
     pretrained_features = load_feature_representation(features_filename)
     
     # Create KFold data generator
