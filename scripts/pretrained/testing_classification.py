@@ -12,13 +12,13 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 
 # Load existing data. The feature_rep functions just use np storage.
 # Image are allready reshaped to (16, 16, 3) here
-images = load_feature_representation("images__noscale_200k.npy")
-energies = load_feature_representation("energies__noscale_200k.npy")
-positions = load_feature_representation("positions__noscale_200k.npy")
-labels = load_feature_representation("labels__noscale_200k.npy")
+images = load_feature_representation("images_noscale_200k.npy")
+energies = load_feature_representation("energies_noscale_200k.npy")
+positions = load_feature_representation("positions_noscale_200k.npy")
+labels = load_feature_representation("labels_noscale_200k.npy")
 
 images = normalize_image_data(images)
-images = np.concatenate((images, images, image), axis=3)
+images = np.concatenate((images, images, images), axis=3)
 n_classes = len(np.unique(labels))
 
 
