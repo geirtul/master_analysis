@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 
 
 
-# Load existing data. The feature_rep functions just use np storage.
+# Load existing data. The feature_rep functions just use numpy storage.
 # Image are allready reshaped to (16, 16, 3) here
 images = load_feature_representation("images_noscale_200k.npy")
 energies = load_feature_representation("energies_noscale_200k.npy")
