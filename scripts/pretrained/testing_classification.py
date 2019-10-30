@@ -4,6 +4,7 @@ import tensorflow as tf
 import sys
 import matplotlib.pyplot as plt
 from master_data_functions.functions import *
+from analysis_functions.function import *
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation
 from sklearn.model_selection import train_test_split, StratifiedKFold
@@ -42,32 +43,6 @@ def create_dense_model(input_shape):
                   metrics=['accuracy'])
 
     return model
-
-def calc_kfold_accuracies(acc_list):
-    """ Given a list of accuracies from a history object from model.fit,
-    calculate mean accuracy, and get min and max accuracies for runs for
-    one network.
-    """
-
-    # Find the top epoch acc for each fold
-    best = []
-    for fold in acc_list:
-        val = np.asarray(fold)
-        best.append(np.amax(val))
-    best = np.asarray(best)
-
-    # Calculate max, min, and mean accuracy
-    acc_min = np.amin(best)
-    acc_max = np.amax(best)
-    acc_mean = np.mean(best)
-
-    return [acc_min, acc_max, acc_mean]
-
-def load_model(model, filename):
-    """ Use tensorflow to save a model instance so that it can be loaded
-    and used for prediction at a later time.
-    """
-    tf.saved_model.save(mode, OUTPUT_PATH + filename)
 
 # Keys: model names, Values: depth to compare at.
 pretrained_models = {
