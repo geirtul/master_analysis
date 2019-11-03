@@ -1,6 +1,6 @@
 # Imports
 import numpy as np
-import tensorflow-gpu as tf
+import tensorflow_gpu as tf
 import sys
 import matplotlib.pyplot as plt
 from master_data_functions.functions import *
