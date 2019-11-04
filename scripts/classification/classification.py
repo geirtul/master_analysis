@@ -59,7 +59,7 @@ with tf.device('/device:GPU:3'):
             labels[train_idx],
             epochs=epochs, 
             batch_size=batch_size,
-            validation_data=(pretrained_features[test_index], labels[test_index]),
+            validation_data=(images[test_idx], labels[test_idx]),
             callbacks=[cb]
             )
 
