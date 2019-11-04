@@ -9,13 +9,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation
 from sklearn.model_selection import train_test_split, StratifiedKFold
 
-# tensorflow configuration
-print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
-
-
-
-exit(1)
-# Load existing data. The feature_rep functions just use numpy storage.
 # Image are allready reshaped to (16, 16, 3) here
 images = load_feature_representation(filename="images_noscale_200k.npy")
 energies = load_feature_representation(filename="energies_noscale_200k.npy")
@@ -40,7 +33,19 @@ train_idx, test_idx, not_used1, not_used2 = train_test_split(x_idx, x_idx, test_
 
 # Initialize model and train
 model = labollita_model()
-model.train(images[train_idx], labels[train_idx])
+
+# Callbacks to save best model
+# Setup callback for saving models
+fpath = OUTPUT_PATH + net + "-{val_accuracy:.2f}.hdf5"
+cb = tf.keras.callbacks.ModelCheckpoint(
+        filepath=fpath, 
+        monitor='val_accuracy', 
+        save_best_only=True
+        )
+
+# Define device scope and fit the data
+with tf.device('/device:GPU:0'):
+    model.fit(images[train_idx], labels[train_idx])
 
 
 
