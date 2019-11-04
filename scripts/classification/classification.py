@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 
 # Path to data on ML-server
 DATA_PATH_ML = "../../data/simulated/"
+OUTPUT_PATH = "../../data/output/"
 images = load_feature_representation(filename="images_noscale_200k.npy", path=DATA_PATH_ML)
 energies = load_feature_representation(filename="energies_noscale_200k.npy", path=DATA_PATH_ML)
 positions = load_feature_representation(filename="positions_noscale_200k.npy", path=DATA_PATH_ML)
@@ -45,7 +46,7 @@ cb = tf.keras.callbacks.ModelCheckpoint(
         )
 
 # Define device scope and fit the data
-with tf.device('/device:GPU:0'):
+with tf.device('/device:GPU:3'):
     model.fit(images[train_idx], labels[train_idx])
 
 
