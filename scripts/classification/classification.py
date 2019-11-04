@@ -11,14 +11,14 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 
 with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
     # Path to data on ML-server
-    DATA_PATH_ML = "../../data/simulated/"
+    DATA_PATH = "../../data/simulated/"
     OUTPUT_PATH = "../../data/output/"
     MODEL_OUTPUT_PATH = OUTPUT_PATH + "models/"
 
-    images = load_feature_representation(filename="images_noscale_200k.npy", path=DATA_PATH_ML)
-    energies = load_feature_representation(filename="energies_noscale_200k.npy", path=DATA_PATH_ML)
-    positions = load_feature_representation(filename="positions_noscale_200k.npy", path=DATA_PATH_ML)
-    labels = load_feature_representation(filename="labels_noscale_200k.npy", path=DATA_PATH_ML)
+    images = np.load(DATA_PATH + "images_noscale_200k.npy")
+    energies = np.load(DATA_PATH + "energies_noscale_200k.npy")
+    positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
+    labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
 
     # Normalize image data
     images = normalize_image_data(images)
@@ -30,11 +30,6 @@ with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
 
     # Split the indices into training and test sets
     train_idx, test_idx, not_used1, not_used2 = train_test_split(x_idx, x_idx, test_size = 0.2)    
-
-    # x_train = images[train_idx]
-    # x_test = images[test_idx]
-    # y_test = labels[test_idx]
-    # y_train = labels[train_idx]
 
     # Initialize model and train
     model = project_model()
