@@ -45,9 +45,23 @@ cb = tf.keras.callbacks.ModelCheckpoint(
         save_best_only=True
         )
 
+# Params for k-fold cross-validation
+#k_splits = 5
+#k_shuffle = True
+epochs = 5
+batch_size = 32
+#kfold_labels = labels.argmax(axis=-1) # StratifiedKFold doesn't take one-hot
 # Define device scope and fit the data
+print("Setting device and starting model fit")
 with tf.device('/device:GPU:3'):
-    model.fit(images[train_idx], labels[train_idx])
+    model.fit(
+            images[train_idx], 
+            labels[train_idx],
+            epochs=epochs, 
+            batch_size=batch_size,
+            validation_data=(pretrained_features[test_index], labels[test_index]),
+            callbacks=[cb]
+            )
 
 
 
