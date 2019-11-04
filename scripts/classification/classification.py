@@ -4,15 +4,17 @@ import tensorflow as tf
 import sys
 import matplotlib.pyplot as plt
 from master_data_functions.functions import *
-from master_models.classification import labollita_model
+from master_models.classification import project_model
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation
 from sklearn.model_selection import train_test_split, StratifiedKFold
 
-with tf.device('/device:GPU:3'):
+with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
     # Path to data on ML-server
     DATA_PATH_ML = "../../data/simulated/"
     OUTPUT_PATH = "../../data/output/"
+    MODEL_OUTPUT_PATH = OUTPUT_PATH + "models/"
+
     images = load_feature_representation(filename="images_noscale_200k.npy", path=DATA_PATH_ML)
     energies = load_feature_representation(filename="energies_noscale_200k.npy", path=DATA_PATH_ML)
     positions = load_feature_representation(filename="positions_noscale_200k.npy", path=DATA_PATH_ML)
@@ -35,14 +37,14 @@ with tf.device('/device:GPU:3'):
     # y_train = labels[train_idx]
 
     # Initialize model and train
-    model = labollita_model()
+    model = project_model()
 
     # Callbacks to save best model
     # Setup callback for saving models
-    fpath = OUTPUT_PATH + "labollita" + "-{accuracy:.2f}.hdf5"
+    fpath = MODEL_OUTPUT_PATH + "project" + "-{val_acc:.2f}.hdf5"
     cb = tf.keras.callbacks.ModelCheckpoint(
             filepath=fpath, 
-            monitor='accuracy', 
+            monitor='val_acc', 
             save_best_only=True
             )
 
