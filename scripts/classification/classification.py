@@ -9,11 +9,12 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation
 from sklearn.model_selection import train_test_split, StratifiedKFold
 
-# Image are allready reshaped to (16, 16, 3) here
-images = load_feature_representation(filename="images_noscale_200k.npy")
-energies = load_feature_representation(filename="energies_noscale_200k.npy")
-positions = load_feature_representation(filename="positions_noscale_200k.npy")
-labels = load_feature_representation(filename="labels_noscale_200k.npy")
+# Path to data on ML-server
+DATA_PATH_ML = "../../data/simulated/"
+images = load_feature_representation(filename="images_noscale_200k.npy", path=DATA_PATH_ML)
+energies = load_feature_representation(filename="energies_noscale_200k.npy", path=DATA_PATH_ML)
+positions = load_feature_representation(filename="positions_noscale_200k.npy", path=DATA_PATH_ML)
+labels = load_feature_representation(filename="labels_noscale_200k.npy", path=DATA_PATH_ML)
 
 # Normalize image data
 images = normalize_image_data(images)
