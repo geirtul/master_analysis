@@ -40,7 +40,7 @@ with g.device('/device:GPU:3'):
 
     # Callbacks to save best model
     # Setup callback for saving models
-    fpath = OUTPUT_PATH + "labollita" + "-{val_accuracy:.2f}.hdf5"
+    fpath = OUTPUT_PATH + "labollita" + "-{accuracy:.2f}.hdf5"
     cb = tf.keras.callbacks.ModelCheckpoint(
             filepath=fpath, 
             monitor='accuracy', 
