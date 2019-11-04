@@ -42,7 +42,7 @@ with tf.device('/device:GPU:3'):
     fpath = OUTPUT_PATH + "labollita" + "-{val_accuracy:.2f}.hdf5"
     cb = tf.keras.callbacks.ModelCheckpoint(
             filepath=fpath, 
-            monitor='val_accuracy', 
+            monitor='accuracy', 
             save_best_only=True
             )
 
