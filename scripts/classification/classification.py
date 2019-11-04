@@ -9,7 +9,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Activation
 from sklearn.model_selection import train_test_split, StratifiedKFold
 
-with tf.device('/device:GPU:3'):
+g = tf.Graph()
+with g.device('/device:GPU:3'):
     # Path to data on ML-server
     DATA_PATH_ML = "../../data/simulated/"
     OUTPUT_PATH = "../../data/output/"
