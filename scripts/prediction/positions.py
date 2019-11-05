@@ -54,6 +54,7 @@ modeltype = "dense"
 with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
     if modeltype == "dense":
         model = position_dense()
+        images = images.reshape(256)
     else:
         model = position_cnn()
 
