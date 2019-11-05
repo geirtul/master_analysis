@@ -49,30 +49,32 @@ def r2_keras(y_true, y_pred):
 
 # ================== Model ==================
 net = "position"
-model = position_model()
 
-# Setup callback for saving models
-fpath = MODEL_PATH + net + "-r2-{r2_keras:.2f}.hdf5"
-cb = tf.keras.callbacks.ModelCheckpoint(
-        filepath=fpath, 
-        monitor='r2_keras', 
-        save_best_only=True
-        )
+with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
+    model = position_model()
 
-# Compile model
-model.compile(loss='mse',
-              optimizer='adam',
-              metrics=[r2_keras])
+    # Setup callback for saving models
+    fpath = MODEL_PATH + net + "-r2-{r2_keras:.2f}.hdf5"
+    cb = tf.keras.callbacks.ModelCheckpoint(
+            filepath=fpath, 
+            monitor='r2_keras', 
+            save_best_only=True
+            )
 
-# Parameters for the model
-batch_size = 32
-epochs = 10
+    # Compile model
+    model.compile(loss='mse',
+                  optimizer='adam',
+                  metrics=[r2_keras])
 
-history = model.fit(
-        images[train_idx],
-        positions[train_idx],
-        batch_size=batch_size,
-        epochs=epochs,
-        validation_data=(images[test_idx], positions[test_idx]),
-        callbacks=[cb])
+    # Parameters for the model
+    batch_size = 32
+    epochs = 10
+
+    history = model.fit(
+            images[train_idx],
+            positions[train_idx],
+            batch_size=batch_size,
+            epochs=epochs,
+            validation_data=(images[test_idx], positions[test_idx]),
+            callbacks=[cb])
 
