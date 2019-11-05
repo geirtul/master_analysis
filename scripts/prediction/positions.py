@@ -49,9 +49,14 @@ def r2_keras(y_true, y_pred):
 
 # ================== Model ==================
 net = "position"
+modeltype = "dense"
 
 with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
-    model = position_model()
+    if modeltype == "dense":
+        model = position_dense()
+    else:
+        model = position_cnn()
+
 
     # Setup callback for saving models
     fpath = MODEL_PATH + net + "-r2-{r2_keras:.2f}.hdf5"
@@ -68,7 +73,7 @@ with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
 
     # Parameters for the model
     batch_size = 32
-    epochs = 10
+    epochs = 5
 
     history = model.fit(
             images[train_idx],
