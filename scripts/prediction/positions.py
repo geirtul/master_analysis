@@ -50,7 +50,6 @@ def r2_keras(y_true, y_pred):
 # ================== Model ==================
 net = "position"
 modeltype = "dense"
-tf.debugging.set_log_device_placement(True)
 with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
     if modeltype == "dense":
         model = position_dense()
