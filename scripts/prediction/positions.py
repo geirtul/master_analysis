@@ -48,18 +48,19 @@ def r2_keras(y_true, y_pred):
 
 
 # ================== Model ==================
-net = "position"
 modeltype = "dense"
 with tf.device('/GPU:3'):
     if modeltype == "dense":
         model = position_dense()
         images = images.reshape((images.shape[0], 256))
+    elif modeltype == "project":
+        model = position_project()
     else:
         model = position_cnn()
 
 
     # Setup callback for saving models
-    fpath = MODEL_PATH + net + "-r2-{r2_keras:.2f}.hdf5"
+    fpath = MODEL_PATH + modeltype + "-r2-{r2_keras:.2f}.hdf5"
     cb = tf.keras.callbacks.ModelCheckpoint(
             filepath=fpath, 
             monitor='r2_keras', 
@@ -72,8 +73,8 @@ with tf.device('/GPU:3'):
                   metrics=[r2_keras])
 
     # Parameters for the model
-    batch_size = 32
-    epochs = 5
+    batch_size = 64
+    epochs = 10
 
     history = model.fit(
             images[train_idx],
