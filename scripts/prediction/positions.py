@@ -50,7 +50,8 @@ def r2_keras(y_true, y_pred):
 # ================== Model ==================
 net = "position"
 modeltype = "dense"
-with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
+print(tf.config.experimental.list_physical_devices('GPU'))
+with tf.device('/GPU:3'):
     if modeltype == "dense":
         model = position_dense()
         images = images.reshape((images.shape[0], 256))
