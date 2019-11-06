@@ -82,5 +82,6 @@ with tf.device('/GPU:3'):
             batch_size=batch_size,
             epochs=epochs,
             validation_data=(images[test_idx], positions[test_idx]),
-            callbacks=[cb])
+            #callbacks=[cb]
+            )
 
