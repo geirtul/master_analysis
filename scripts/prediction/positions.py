@@ -54,7 +54,7 @@ tf.debugging.set_log_device_placement(True)
 with tf.device('/job:localhost/replica:0/task:0/device:GPU:3'):
     if modeltype == "dense":
         model = position_dense()
-        images = images.reshape(256)
+        images = images.reshape((images.shape[0], 256))
     else:
         model = position_cnn()
 
