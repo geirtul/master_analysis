@@ -1,0 +1,39 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+
+# Folders
+##########
+data/output/*
+data/simulated
+notebooks/pretrained/plots
+notebooks/pretrained/features_close_vs_single
+notebooks/pretrained/full-depth-fully-connected
+notebooks/pretrained/pretrained_venv
+notebooks/pretrained/relative_dist
+
