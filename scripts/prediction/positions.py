@@ -48,7 +48,7 @@ def r2_keras(y_true, y_pred):
 
 
 # ================== Model ==================
-modeltype = "dense"
+modeltype = "cnn"
 with tf.device('/GPU:3'):
     if modeltype == "dense":
         model = position_dense()
@@ -82,6 +82,6 @@ with tf.device('/GPU:3'):
             batch_size=batch_size,
             epochs=epochs,
             validation_data=(images[test_idx], positions[test_idx]),
-            #callbacks=[cb]
+            callbacks=[cb]
             )
 
