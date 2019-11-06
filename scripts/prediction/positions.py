@@ -64,7 +64,8 @@ with tf.device('/GPU:3'):
     cb = tf.keras.callbacks.ModelCheckpoint(
             filepath=fpath, 
             monitor='r2_keras', 
-            save_best_only=True
+            save_best_only=True,
+            mode='max'
             )
 
     # Compile model
