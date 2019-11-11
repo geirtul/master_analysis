@@ -28,9 +28,6 @@ positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
 # Plan is to predict two positions regardless of single or double
 # event, but for single events x2,y2 should be predicted out of bounds.
 single_indices, double_indices, close_indices = event_indices(positions)
-positions[single_indices, 2:] = -1.0
-positions[single_indices, :2] *= 3 # Scale to mm instead of pixels
-positions[double_indices] *= 3
 
 # Split indices into training and test sets
 x_idx = np.arange(images.shape[0])
@@ -39,8 +36,12 @@ train_idx, test_idx, not_used1, not_used2 = train_test_split(
         x_idx, 
         test_size = 0.2
         )  
+single_train, dummy1, dummy2 = event_indices(positions[train_idx])
+single_test, dummy1, dummy2 = event_indices(positions[test_idx])
 
-
+positions[single_indices, 2:] = -1.0
+positions[single_indices, :2] *= 3 # Scale to mm instead of pixels
+positions[double_indices] *= 3
 # ================== Custom Functions ==================
 # Define R2 score for metrics since it's not available by default
 def r2_keras(y_true, y_pred):
@@ -80,11 +81,11 @@ with tf.device('/GPU:3'):
     epochs = 10
 
     history = model.fit(
-            images[train_idx],
-            positions[train_idx],
+            images[train_idx][single_train],
+            positions[train_idx][single_train],
             batch_size=batch_size,
             epochs=epochs,
-            validation_data=(images[test_idx], positions[test_idx]),
+            validation_data=(images[test_idx][single_test], positions[test_idx][single_test]),
             callbacks=[cb]
             )
 
