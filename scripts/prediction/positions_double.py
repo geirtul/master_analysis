@@ -18,8 +18,8 @@ OUTPUT_PATH = "../../data/output/"
 MODEL_PATH = OUTPUT_PATH + "models/"
 
 # ================== Import Data ==================
-images = np.load(DATA_PATH + "images_noscale_200k.npy")
-positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
+images = np.load(DATA_PATH + "images_1M.npy")
+positions = np.load(DATA_PATH + "positions_1M.npy")
 #labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
 
 # ================== Prepare Data ==================
@@ -51,8 +51,8 @@ def r2_keras(y_true, y_pred):
 
 
 # ================== Model ==================
-modeltype = "project"
-with tf.device('/GPU:3'):
+modeltype = "cnn"
+with tf.device('/GPU:2'):
     if modeltype == "dense":
         model = position_dense()
         images = images.reshape((images.shape[0], 256))
