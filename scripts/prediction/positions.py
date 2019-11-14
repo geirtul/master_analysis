@@ -32,8 +32,8 @@ images = normalize_image_data(images)
 # event, but for single events x2,y2 should be predicted out of bounds.
 single_indices, double_indices, close_indices = event_indices(positions)
 positions[single_indices, 2:] = -1.0
-positions[single_indices, :2] *= 3 # Scale to mm instead of pixels
-positions[double_indices] *= 3
+positions[single_indices, :2] /= 16 # Scale to mm instead of pixels
+positions[double_indices] /= 16
 
 # Split indices into training and test sets
 x_idx = np.arange(images.shape[0])
@@ -79,8 +79,8 @@ with tf.device('/GPU:2'):
                   metrics=[r2_keras])
 
     # Parameters for the model
-    batch_size = 64
-    epochs = 10
+    batch_size = 128
+    epochs = 5
 
     history = model.fit(
             images[train_idx],
