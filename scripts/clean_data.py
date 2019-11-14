@@ -23,15 +23,21 @@ with open(filepath, "r") as infile:
         positions.append(position)
         labels.append(label)
 
-# Convert lists to numpy arrays and reshape them to remove the added axis from
-# conversion. TODO: Find a better way to do this?
+# Convert lists to numpy arrays and reshape them to remove the added axis 
 images = np.array(images)
-print(np.amax(images))
-print(np.amin(images))
+img_mean = np.mean(images)
+img_bottom = np.amax(images) - np.amin(images)
+images = images.reshape(images.shape[0], images.shape[2], images.shape[3], images.shape[4])
+for i in range(images.shape[0]):
+    try:
+        normalized = (images[i] - img_mean)/img_bottom
+    except RunTimeWarning:
+        print("Runtime:", i)
+        print(images[i], img_mean, img_bottom)
+
 #energies = np.array(energies)
 #positions = np.array(positions)
 #labels = np.array(labels)
 
-#images = images.reshape(images.shape[0], images.shape[2], images.shape[3], images.shape[4])
 #energies = energies.reshape(energies.shape[0], energies.shape[2])
 #positions = positions.reshape(positions.shape[0], positions.shape[2])
