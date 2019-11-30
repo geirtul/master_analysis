@@ -1,22 +1,8 @@
 \section{Introduction}
-A short summary of current work on using pre-trained neural networks to classify
-single and double events in scintillator data.
+In this summary we look at the current status of predicting the energy and
+position of origin of simulated scintillator events. We go through the models
+used in prediction and the metrics currently applied in evaluation of results.
 
-\section{What are pre-trained networks and how do we use them?}
-As the name suggests a pre-trained network is a network that has already
-been trained, usually on very large amounts of data over a significant amount
-of time. This is the case for the networks explored in this work. The networks
-have all been trained on the "ImageNet" database and are on the cutting edge in
-computer vision. They have also been analyzed extensively, increasing the amount
-of insight in the learning process.
+We present the results of prediction on both single and double events, and
+attempt to find explanations for the large difference in performance.
 
-But we're not interested in classifying ImageNet data, we have our own data,
-so how can we use the power of these networks for our own purposes?
-The answer is \textbf{feature extraction}. When feeding an image forward
-through the trained network, the various filters (or "kernels") react to different features
-of the image, like edges or lines, general shapes etc. What we end up with on the other side
-of the network is a "feature representation" of the input image. Hopefully, an input image
-of say a cat and a car will produce significantly different feature representations, allowing
-for classification. In our case we desire that the feature representations for single and
-double events are different. This is the first thing we test when looking at which networks
-might work for us.
