@@ -1,0 +1,79 @@
+\subsection{Results}
+The tables \ref{tab:features} and \ref{tab:features-close} show the number of features for each network,
+and the ratio of features that have a p-value below certain thresholds corresponding to different levels
+of significance. From the results it would seem that MobileNet and the NASNet variants may perform worse
+than the rest of the networks, and VGG16 and VGG19 may follow the same trend. At the very least it seems
+reasonable to bring each network with us in the next stages. We could perhaps discard MobileNet, but it
+could be useful to keep as a sort of benchmark. We also don't know how many features need to be different
+in order to make classification possible, and while the ratios for MobileNet are low, there's still
+$0.227\cdot 2048 ~ 465$ different features, which is actually more features than MobileNetV2 and the Inception 
+variants. Table \ref{tab:features-close} show only a slight decrease from \ref{tab:features}, so we will not
+discard the possibility of classifying double events that are separated by only a small distance.
+\begin{table}[h]
+    \begin{tabular}{l|c|r|r|r}
+	\hline
+	 Network           &   features &   ratio $p < 0.01$ &   ratio $p < 0.005$ &   ratio $p < 0.001$ \\
+	\hline
+	 DenseNet121       &            512 &         1.00  &          1.00   &          1.00   \\
+	 DenseNet169       &            512 &         1.00  &          1.00   &          1.00   \\
+	 DenseNet201       &            512 &         1.00  &          1.00   &          1.00   \\
+	 InceptionResNetV2 &            320 &         0.969 &          0.969  &          0.966  \\
+	 InceptionV3       &            320 &         0.981 &          0.981  &          0.981  \\
+	 MobileNet         &           2048 &         0.227 &          0.227  &          0.227  \\
+	 MobileNetV2       &            384 &         1.00  &          1.00   &          1.00   \\
+	 NASNetLarge       &           2058 &         0.510 &          0.510  &          0.510  \\
+	 NASNetMobile      &            539 &         0.510 &          0.510  &          0.510  \\
+	 ResNet50          &           4096 &         1.00  &          1.00   &          1.00   \\
+	 VGG16             &            512 &         0.633 &          0.633  &          0.627  \\
+	 VGG19             &            512 &         0.652 &          0.652  &          0.652  \\
+	 Xception          &           3200 &         1.00  &          1.00   &          1.00   \\
+	\hline
+    \end{tabular}
+    \caption{Comparison of feature distributions for single events and double events for all networks.
+    The dataset is balanced, containing 100000 of each event type.}
+    \label{tab:features}
+\end{table}[h]
+% Result from new run of feature distribution comparisons
+%\begin{tabular}{lrrrr}
+%\hline
+% Network           &   num\_features &   ratio p \ensuremath{<} 0.01 &   ratio p \ensuremath{<} 0.005 &   ratio p \ensuremath{<} 0.001 \\
+%\hline
+% DenseNet121       &            512 &         1        &          1        &          1        \\
+% DenseNet169       &            512 &         1        &          1        &          1        \\
+% DenseNet201       &            512 &         1        &          1        &          1        \\
+% InceptionResNetV2 &            320 &         0.965625 &          0.965625 &          0.965625 \\
+% InceptionV3       &            320 &         0.959375 &          0.959375 &          0.959375 \\
+% MobileNet         &           2048 &         0.224609 &          0.224609 &          0.224121 \\
+% MobileNetV2       &            384 &         1        &          1        &          1        \\
+% NASNetLarge       &           2058 &         0.510204 &          0.510204 &          0.510204 \\
+% NASNetMobile      &            539 &         0.510204 &          0.510204 &          0.510204 \\
+% ResNet50  &           4096 &         1        &          1        &          1        \\
+% VGG16     &            512 &         0.609375 &          0.607422 &          0.607422 \\
+% VGG19     &            512 &         0.632812 &          0.630859 &          0.626953 \\
+% Xception  &           3200 &         1        &          1        &          1        \\
+%\hline
+%\end{tabular}
+\begin{table}
+    \begin{tabular}{lrrrr}
+	\hline
+	 Network           &   features &   ratio $p < 0.01$ &   ratio $p < 0.005$ &   ratio $p < 0.001$ \\
+	\hline
+	 DenseNet121       &            512 &         1.00  &          1.00  &          1.00  \\
+	 DenseNet169       &            512 &         0.998 &          0.998 &          0.998 \\
+	 DenseNet201       &            512 &         1.00  &          1.00  &          1.00  \\
+	 InceptionResNetV2 &            320 &         0.969 &          0.969 &          0.966 \\
+	 InceptionV3       &            320 &         0.972 &          0.969 &          0.962 \\
+	 MobileNet         &           2048 &         0.222 &          0.221 &          0.219 \\
+	 MobileNetV2       &            384 &         1.00  &          1.00  &          1.00  \\
+	 NASNetLarge       &           2058 &         0.481 &          0.474 &          0.457 \\
+	 NASNetMobile      &            539 &         0.458 &          0.445 &          0.419 \\
+	 ResNet50          &           4096 &         1.00  &          0.999 &          0.999 \\
+	 VGG16             &            512 &         0.602 &          0.599 &          0.598 \\
+	 VGG19             &            512 &         0.643 &          0.643 &          0.639 \\
+	 Xception          &           3200 &         1.00  &          1.00  &          0.999 \\
+	\hline
+    \end{tabular}
+    \caption{Comparison of feature distributions for single events and double events with relative distance
+	between events $< 3mm$. The dataset contain 100000 single events and 11006 double events.}
+    \label{tab:features-close}
+\end{table}
