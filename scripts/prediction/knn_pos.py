@@ -11,6 +11,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Activation
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend
+from sklearn.neighbors import KNeighborsRegressor
 
 # PATH variables
 DATA_PATH = "../../data/simulated/"
@@ -38,10 +39,11 @@ positions[double_indices] /= 16
 # Split indices into training and test sets
 x_idx = np.arange(images.shape[0])
 train_idx, test_idx, not_used1, not_used2 = train_test_split(
-        double_indices, 
-        double_indices, 
+        x_idx, 
+        x_idx, 
         test_size = 0.2
         ) 
+images = images.reshape(images.shape[0], 256)
 
 # Save training and test indices, and also the test set
 #np.save("train_idx.npy", train_idx)
@@ -57,43 +59,8 @@ def r2_keras(y_true, y_pred):
     return ( 1 - SS_res/(SS_tot + backend.epsilon()) )
 
 # ================== Model ==================
-with tf.device('/GPU:2'):
-    # Set of learning rates to explore, 1e-3 best so far ~0.49 r2
-    #lmbdas = [0.5e-3, 0.8e-3, 1e-3, 1.2e-3, 1.5e-3]
-    lmbdas = [1e-3,]
-    for lmbda in lmbdas:
-        print("================ Running with lr = ", lmbda)
-        model = position_cnn()
-        curr_adam = tf.keras.optimizers.Adam(lr=lmbda)
-        # Setup callback for saving models
-        fpath = MODEL_PATH + "cnn_nodrop-" + "lr-" + str(lmbda) +  "-r2-{val_r2_keras:.2f}.hdf5"
-        cb = tf.keras.callbacks.ModelCheckpoint(
-                filepath=fpath, 
-                monitor='val_r2_keras', 
-                save_best_only=True,
-                mode='max'
-                )
+neigh = KNeighborsRegressor(n_neighbors=2)
+neigh.fit(images[train_idx], positions[train_idx])
+print(neigh.score(images[test_idx], positions[test_idx]))
 
-        # Compile model
-        model.compile(loss='mse',
-                      optimizer=curr_adam,
-                      metrics=[r2_keras])
-        print(model.summary())
-
-        # Parameters for the model
-        batch_size = 128
-        epochs = 5
-
-        history = model.fit(
-                normalize_image_data(images[train_idx]),
-                positions[train_idx],
-                batch_size=batch_size,
-                epochs=epochs,
-                validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
-                callbacks=[cb]
-                )
-
-        # Predict and save predictions to go with the rest of the test data.
-        #y_pred = model.predict(normalize_image_data(images[test_idx]))
-        #np.save("test_y_pred_1M.npy", y_pred)
 
