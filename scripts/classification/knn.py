@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from master_data_functions.functions import *
 from master_models.prediction import *
 from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neighbors import KNeighborsClassifier
 
 # PATH variables
 DATA_PATH = "../../data/simulated/"
@@ -19,7 +19,7 @@ images = normalize_image_data(images)
 #images = np.load(DATA_PATH + "images_1M.npy")
 #positions = np.load(DATA_PATH + "positions_1M.npy")
 #energies = np.load(DATA_PATH + "energies_1M.npy")
-#labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
+labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
 # ================== Prepare Data ==================
 
 # Set positions x2,y2 for single events to -1 instead of -100
@@ -47,8 +47,8 @@ images = images.reshape(images.shape[0], 256)
 #np.save("test_energies_double_1M.npy", energies[test_idx])
 
 # ================== Model ==================
-neigh = KNeighborsRegressor(n_neighbors=3)
-neigh.fit(images[train_idx], positions[train_idx])
-print(neigh.score(images[test_idx], positions[test_idx]))
+neigh = KNeighborsClassifier(n_neighbors=3)
+neigh.fit(images[train_idx], labels[train_idx])
+print(neigh.score(images[test_idx], labels[test_idx]))
 
 
