@@ -57,17 +57,12 @@ def r2_keras(y_true, y_pred):
     return ( 1 - SS_res/(SS_tot + backend.epsilon()) )
 
 # ================== Model ==================
-modeltype = "cnn_nodrop"
 with tf.device('/GPU:2'):
-    if modeltype == "project":
-        model = position_project()
-    else:
-        model = position_cnn()
-
     # Set of learning rates to explore
     lmbdas = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
     for lmbda in lmbdas:
-        curr_adam = tf.optimizers.Adam(learning_rate=lmbda)
+        model = position_cnn()
+        curr_adam = tf.keras.optimizers.Adam(learning_rate=lmbda)
         # Setup callback for saving models
         fpath = MODEL_PATH + modeltype + "lr-{lmbda:.2f}-r2-{val_r2_keras:.2f}.hdf5"
         cb = tf.keras.callbacks.ModelCheckpoint(
