@@ -1,0 +1,20 @@
+\section{Theory}
+\subsection{Normalization}
+\subsubsection{Pixel values}
+To reduce the risk of exploding and/or vanishing gradients, pixel values are 
+commonly normalized to $[0, 1]$ or to $[-1, 1]$ (with zero-mean). 
+Here we have opted for a min-max scaling to the $[0, 1]$ interval.
+For a set of images the minimum and maximum pixel values across all images
+in the set are the ones used in calculations. This preserves differences in
+intensities between images in the set, and also the shape of the intensity 
+distribution. Min-max scaling is calculated as
+\begin{equation}
+    \text{scaled image} = \f{\text{image} - \mu_{image}}{I_{max} - I_{min}},
+\end{equation}
+where $I_{max}$ and $I_{min}$ refer to the maximum and minimum pixel intensity,
+and $\mu_{image}$ is the mean pixel intensity for the set of images.
+
+\subsection{Distances}
+The data provides position of origin in units of pixels, such that coordinates
+$x,y \in [0,16]$. We normalize these to the interval $[0,1]$ by dividing all
+distance by 16.

@@ -1,0 +1,81 @@
+\documentclass[12pt, notitlepage]{article}
+%\usepackage[backend=biber]{biblatex}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{caption}
+%\usepackage{subcaption}
+\usepackage{commath}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{dirtytalk}
+\usepackage{listings}
+\usepackage{wasysym}
+\usepackage{float}
+\usepackage{listings}
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage{subfig}
+
+% Packages from derivations_fullproblem.tex
+\usepackage[squaren]{SIunits}
+\usepackage{a4wide}
+\usepackage{array}
+\usepackage{cancel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{titling}
+
+% Parameters for displaying code.
+\lstset{language=python}
+\lstset{basicstyle=\ttfamily\small}
+\lstset{frame=single}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+
+% Define new commands
+\newcommand{\expect}[1]{\langle #1 \rangle}
+\newcommand{\dd}[1]{\ \text{d}#1}
+\newcommand{\f}[2]{\frac{#1}{#2}} 
+\newcommand{\tf}[2]{\tfrac{#1}{#2}}
+\newcommand{\beq}{\begin{equation*}}
+\newcommand{\eeq}{\end{equation*}}
+\newcommand{\bra}[1]{\langle #1|}
+\newcommand{\ket}[1]{|#1 \rangle}
+\newcommand{\braket}[2]{\langle #1 | #2 \rangle}
+\newcommand{\av}[1]{\left| #1 \right|}
+\newcommand{\op}[1]{\widehat{#1}}
+\newcommand{\braopket}[3]{\langle #1 | \op{#2} | #3 \rangle}
+\newcommand{\ketbra}[2]{\ket{#1}\bra{#2}}
+\newcommand{\pp}[1]{\frac{\partial}{\partial #1}}
+\newcommand{\ppn}[1]{\frac{\partial^2}{\partial #1^2}}
+\newcommand{\up}{\left|\uparrow\rangle\right.}
+\newcommand{\down}{\left|\downarrow\rangle\right.}
+\newcommand{\updown}{\left|\uparrow\downarrow\rangle\right.}
+\newcommand{\downup}{\left|\downarrow\uparrow\rangle\right.}
+\newcommand{\ua}{\uparrow}
+\newcommand{\da}{\downarrow}
+% Add bibliography
+\begin{document}
+
+
+\title{Predicting Event Energy and Position of Origin using Neural Networks}
+\author{Geir Tore Ulvik}
+\maketitle
+\include{introduction}
+\include{theory}
+\include{results}
+
+%\appendix
+%\bibliographystyle{unsrt}
+%\bibliography{bibliography}
+\end{document}
+
