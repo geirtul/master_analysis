@@ -18,3 +18,66 @@ and $\mu_{image}$ is the mean pixel intensity for the set of images.
 The data provides position of origin in units of pixels, such that coordinates
 $x,y \in [0,16]$. We normalize these to the interval $[0,1]$ by dividing all
 distances by 16.
+
+\subsection{Metrics}
+How do we evaluate the performance of a model? For regression the most common
+metrics are the \textbf{Mean Absolute Error}, 
+\textbf{Mean Squared Error}, \textbf{Root Mean Squared Error}, and the \textbf{R2 score}.
+
+\subsubsection{Mean Absolute Error (MAE)}
+The MAE is calculated by taking the mean of the absolute value of residuals.
+Residuals are obtained by subtracting the predicted values ($\hat{y}$) from the 
+corresponding true values ($y$).
+The MAE is then defined as
+\begin{equation}\label{metrics:mae}
+    MAE = \f{1}{n}\sum_{i=0}^{n-1}\abs{y_i - \hat{y}_i}
+\end{equation}
+
+\subsubsection{Mean Squared Error}
+The MSE is the mean of the squared residuals. Since the residuals are squared
+before the mean is taken, large errors are weighted higher than small errors.
+It is defined as
+\begin{equation}\label{metrics:mse}
+    \f{1}{n}\sum_{i=0}^{n-1}(y_i - \hat{y_i}^{2},
+\end{equation}
+
+\subsubsection{Root Mean Squared Error (RMSE)}
+Taking the square root of the MSE (\ref{metrics:mse}) yields the RMSE.
+This quantity is similar to the MAE, but weighs larger errors heavier
+for the same reason the MSE does.
+\begin{equation}
+    RMSE = \sqrt{MSE}
+\end{equation}
+The RMSE and MSE both tell you something about the magnitude of the errors
+in predictions, but they are useful in different situations. If some large
+errors aren't a problem, MAE can be better, but if those large errors are
+highly undesireable RMSE may give you better insight intoodel performance.
+
+\subsubsection{$R^2$ Score}
+The $R^2$ score can be seen as a measure of how much of the variance in the
+predicted values ($\hat{y}$) is explained by the variance in the input ($y$).
+Let the mean of the predicted values be given by
+\begin{equation}\label{metrics:mean}
+    \bar{y} =\f{1}{n}\sum_{i=0}^{n-1}\hat{y}_{i}.
+\end{equation}
+Using three sums of squares - the total sum of squares,
+\begin{equation}
+    SS_{tot} = \sum_{i}(y_i - \bar{y})^{2},
+\end{equation}
+the regression sum of squares,
+\begin{equation}
+    SS_{reg} = \sum_{i}(\hat{y}_i - \bar{y})^{2},
+\end{equation}
+and the residual sum of squares
+\begin{equation}
+    SS_{res} = \sum_{i}(y_i - \hat{y}_i)^{2},
+\end{equation}
+the most general definition of the R2 score is as
+\begin{equation}
+    R^2 \equiv 1 - \f{SS_{res}}{SS_{tot}}
+\end{equation}
+
+If your models performs with a score of $R^2 = 0.49$, then $49\%$ of the
+variance in the predicted values is explained by the variance in the input.
+The remaining $51\%$ is unaccounted for. The maximum score is $R^2 = 1.0$,
+in which the model predicts perfectly.
