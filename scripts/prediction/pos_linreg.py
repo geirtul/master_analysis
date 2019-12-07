@@ -6,6 +6,7 @@ from master_data_functions.functions import *
 from master_models.prediction import *
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 
 # PATH variables
 DATA_PATH = "../../data/simulated/"
@@ -13,11 +14,11 @@ OUTPUT_PATH = "../../data/output/"
 MODEL_PATH = OUTPUT_PATH + "models/"
 
 # ================== Import Data ==================
-#images = np.load(DATA_PATH + "images_noscale_200k.npy")
-#positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
-#images = normalize_image_data(images)
-images = np.load(DATA_PATH + "images_1M.npy")
-positions = np.load(DATA_PATH + "positions_1M.npy")
+images = np.load(DATA_PATH + "images_noscale_200k.npy")
+positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
+images = normalize_image_data(images)
+#images = np.load(DATA_PATH + "images_1M.npy")
+#positions = np.load(DATA_PATH + "positions_1M.npy")
 #energies = np.load(DATA_PATH + "energies_1M.npy")
 #labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
 # ================== Prepare Data ==================
@@ -33,8 +34,8 @@ positions[double_indices] /= 16
 # Split indices into training and test sets
 x_idx = np.arange(images.shape[0])
 train_idx, test_idx, not_used1, not_used2 = train_test_split(
-        x_idx, 
-        x_idx, 
+        double_indices, 
+        double_indices, 
         test_size = 0.2
         ) 
 images = images.reshape(images.shape[0], 256)
@@ -48,7 +49,10 @@ images = images.reshape(images.shape[0], 256)
 
 # ================== Model ==================
 linreg = LinearRegression().fit(images[train_idx], positions[train_idx])
-print(linreg.score(images[train_idx], positions[train_idx]))
-print(linreg.score(images[test_idx], positions[test_idx]))
-
-
+ridge = Ridge().fit(images[train_idx], positions[train_idx])
+print("Linear Regression:")
+print("Train:\t", linreg.score(images[train_idx], positions[train_idx]))
+print("Test:\t", linreg.score(images[test_idx], positions[test_idx]))
+print("Ridge Regression:")
+print("Train:\t", ridge.score(images[train_idx], positions[train_idx]))
+print("Test:\t", ridge.score(images[test_idx], positions[test_idx]))
