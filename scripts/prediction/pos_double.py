@@ -31,9 +31,9 @@ energies = np.load(DATA_PATH + "energies_1M.npy")
 # Plan is to predict two positions regardless of single or double
 # event, but for single events x2,y2 should be predicted out of bounds.
 single_indices, double_indices, close_indices = event_indices(positions)
-positions[single_indices, 2:] = -1.0
-positions[single_indices, :2] /= 16 # Scale to mm instead of pixels
-positions[double_indices] /= 16
+#positions[single_indices, 2:] = -1.0
+#positions[single_indices, :2] /= 16 # Scale to mm instead of pixels
+#positions[double_indices] /= 16
 
 # Split indices into training and test sets
 x_idx = np.arange(images.shape[0])
@@ -58,7 +58,6 @@ def r2_keras(y_true, y_pred):
 
 # ================== Model ==================
 with tf.device('/GPU:2'):
-    # Set of learning rates to explore, 1e-3 best so far ~0.49 r2
     #lmbdas = [0.5e-3, 0.8e-3, 1e-3, 1.2e-3, 1.5e-3]
     lmbdas = [1e-3,]
     for lmbda in lmbdas:
@@ -76,12 +75,12 @@ with tf.device('/GPU:2'):
 
         # Compile model
         model.compile(loss='mse',
-                      optimizer=curr_adam,
+                      optimizer='adam',
                       metrics=[r2_keras])
         print(model.summary())
 
         # Parameters for the model
-        batch_size = 128
+        batch_size = 32
         epochs = 5
 
         history = model.fit(
