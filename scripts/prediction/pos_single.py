@@ -59,7 +59,6 @@ def r2_keras(y_true, y_pred):
 # ================== Model ==================
 with tf.device('/GPU:2'):
     model = position_cnn()
-    curr_adam = tf.keras.optimizers.Adam(lr=lmbda)
     # Setup callback for saving models
     fpath = MODEL_PATH + "cnn_single_" + "r2_{val_r2_keras:.2f}.hdf5"
     cb = tf.keras.callbacks.ModelCheckpoint(
@@ -70,6 +69,8 @@ with tf.device('/GPU:2'):
             )
 
     # Compile model
+    ## Custom optimizer
+    #curr_adam = tf.keras.optimizers.Adam(lr=lmbda)
     model.compile(loss='mse',
                   optimizer='adam',
                   metrics=[r2_keras])
