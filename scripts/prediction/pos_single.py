@@ -53,7 +53,7 @@ def r2_keras(y_true, y_pred):
 
 # ================== Model ==================
 with tf.device('/GPU:2'):
-    model = position_cnn()
+    model = position_single_cnn()
     # Setup callback for saving models
     fpath = MODEL_PATH + "cnn_single_" + "r2_{val_r2_keras:.2f}.hdf5"
     cb_save = tf.keras.callbacks.ModelCheckpoint(
@@ -82,10 +82,10 @@ with tf.device('/GPU:2'):
 
     history = model.fit(
             normalize_image_data(images[train_idx]),
-            positions[train_idx],
+            positions[train_idx,:2],
             batch_size=batch_size,
             epochs=epochs,
-            validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
+            validation_data=(normalize_image_data(images[test_idx]), positions[test_idx,:2]),
             callbacks=[cb_earlystopping]
             )
 
