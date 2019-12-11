@@ -61,12 +61,17 @@ with tf.device('/GPU:2'):
     model = position_cnn()
     # Setup callback for saving models
     fpath = MODEL_PATH + "cnn_single_" + "r2_{val_r2_keras:.2f}.hdf5"
-    cb = tf.keras.callbacks.ModelCheckpoint(
+    cb_save = tf.keras.callbacks.ModelCheckpoint(
             filepath=fpath, 
             monitor='val_r2_keras', 
             save_best_only=True,
             mode='max'
             )
+    cb_earlystopping = tf.keras.callbacks.EarlyStopping(
+            monitor='val_loss', 
+            patience=2,
+            )
+
 
     # Compile model
     ## Custom optimizer
@@ -86,7 +91,7 @@ with tf.device('/GPU:2'):
             batch_size=batch_size,
             epochs=epochs,
             validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
-            callbacks=[cb]
+            callbacks=[cb_earlystopping]
             )
 
     # Predict and save predictions to go with the rest of the test data.
