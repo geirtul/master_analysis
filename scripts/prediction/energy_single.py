@@ -22,12 +22,11 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 #positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
 #images = normalize_image_data(images)
 images = np.load(DATA_PATH + "images_1M.npy")
-positions = np.load(DATA_PATH + "positions_1M.npy")
+energies = np.load(DATA_PATH + "energies_1M.npy")
 #labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
 # ================== Prepare Data ==================
 
 single_indices, double_indices, close_indices = event_indices(positions)
-positions = normalize_position_data(positions)
 
 # Split indices into training and test sets
 x_idx = np.arange(images.shape[0])
@@ -52,9 +51,9 @@ def r2_keras(y_true, y_pred):
 
 # ================== Model ==================
 with tf.device('/GPU:2'):
-    model = position_single_cnn()
+    model = energy_single_cnn()
     # Setup callback for saving models
-    fpath = MODEL_PATH + "cnn_pos_single_" + "r2_{val_r2_keras:.2f}.hdf5"
+    fpath = MODEL_PATH + "cnn_energy_single_" + "r2_{val_r2_keras:.2f}.hdf5"
     cb_save = tf.keras.callbacks.ModelCheckpoint(
             filepath=fpath, 
             monitor='val_r2_keras', 
@@ -81,10 +80,10 @@ with tf.device('/GPU:2'):
 
     history = model.fit(
             normalize_image_data(images[train_idx]),
-            positions[train_idx,:2],
+            energies[train_idx, 0],
             batch_size=batch_size,
             epochs=epochs,
-            validation_data=(normalize_image_data(images[test_idx]), positions[test_idx,:2]),
+            validation_data=(normalize_image_data(images[test_idx]), energies[test_idx,0]),
             callbacks=[cb_earlystopping]
             )
 

@@ -20,11 +20,10 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 # ================== Import Data ==================
 #images = np.load(DATA_PATH + "images_noscale_200k.npy")
 #positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
+#energies = np.load(DATA_PATH + "energies_noscale_200k.npy")
 #images = normalize_image_data(images)
 images = np.load(DATA_PATH + "images_1M.npy")
 positions = np.load(DATA_PATH + "positions_1M.npy")
-energies = np.load(DATA_PATH + "energies_1M.npy")
-#labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
 # ================== Prepare Data ==================
 
 single_indices, double_indices, close_indices = event_indices(positions)
@@ -55,7 +54,7 @@ def r2_keras(y_true, y_pred):
 with tf.device('/GPU:2'):
     model = position_double_cnn()
     # Setup callback for saving models
-    fpath = MODEL_PATH + "cnn_double_" + "r2_{val_r2_keras:.2f}.hdf5"
+    fpath = MODEL_PATH + "cnn_pos_double_" + "r2_{val_r2_keras:.2f}.hdf5"
 
     # Callbacks
     cb_save = tf.keras.callbacks.ModelCheckpoint(
