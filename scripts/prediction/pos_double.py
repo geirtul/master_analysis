@@ -58,41 +58,37 @@ def r2_keras(y_true, y_pred):
 
 # ================== Model ==================
 with tf.device('/GPU:2'):
-    #lmbdas = [0.5e-3, 0.8e-3, 1e-3, 1.2e-3, 1.5e-3]
-    lmbdas = [1e-3,]
-    for lmbda in lmbdas:
-        print("================ Running with lr = ", lmbda)
-        model = position_cnn()
-        curr_adam = tf.keras.optimizers.Adam(lr=lmbda)
-        # Setup callback for saving models
-        fpath = MODEL_PATH + "cnn_nodrop-" + "lr-" + str(lmbda) +  "-r2-{val_r2_keras:.2f}.hdf5"
-        cb = tf.keras.callbacks.ModelCheckpoint(
-                filepath=fpath, 
-                monitor='val_r2_keras', 
-                save_best_only=True,
-                mode='max'
-                )
+    model = position_cnn()
+    curr_adam = tf.keras.optimizers.Adam(lr=lmbda)
+    # Setup callback for saving models
+    fpath = MODEL_PATH + "cnn_double_" + "r2_{val_r2_keras:.2f}.hdf5"
+    cb = tf.keras.callbacks.ModelCheckpoint(
+            filepath=fpath, 
+            monitor='val_r2_keras', 
+            save_best_only=True,
+            mode='max'
+            )
 
-        # Compile model
-        model.compile(loss='mse',
-                      optimizer='adam',
-                      metrics=[r2_keras])
-        print(model.summary())
+    # Compile model
+    model.compile(loss='mse',
+                  optimizer='adam',
+                  metrics=[r2_keras])
+    print(model.summary())
 
-        # Parameters for the model
-        batch_size = 32
-        epochs = 5
+    # Parameters for the model
+    batch_size = 32
+    epochs = 5
 
-        history = model.fit(
-                normalize_image_data(images[train_idx]),
-                positions[train_idx],
-                batch_size=batch_size,
-                epochs=epochs,
-                validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
-                callbacks=[cb]
-                )
+    history = model.fit(
+            normalize_image_data(images[train_idx]),
+            positions[train_idx],
+            batch_size=batch_size,
+            epochs=epochs,
+            validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
+            callbacks=[cb]
+            )
 
-        # Predict and save predictions to go with the rest of the test data.
-        #y_pred = model.predict(normalize_image_data(images[test_idx]))
-        #np.save("test_y_pred_1M.npy", y_pred)
+    # Predict and save predictions to go with the rest of the test data.
+    #y_pred = model.predict(normalize_image_data(images[test_idx]))
+    #np.save("test_y_pred_1M.npy", y_pred)
 
