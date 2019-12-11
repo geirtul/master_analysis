@@ -23,6 +23,7 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 #images = normalize_image_data(images)
 images = np.load(DATA_PATH + "images_1M.npy")
 energies = np.load(DATA_PATH + "energies_1M.npy")
+positions = np.load(DATA_PATH + "positions_1M.npy")
 #labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
 # ================== Prepare Data ==================
 
