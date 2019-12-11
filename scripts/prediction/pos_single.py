@@ -27,13 +27,8 @@ energies = np.load(DATA_PATH + "energies_1M.npy")
 #labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
 # ================== Prepare Data ==================
 
-# Set positions x2,y2 for single events to -1 instead of -100
-# Plan is to predict two positions regardless of single or double
-# event, but for single events x2,y2 should be predicted out of bounds.
 single_indices, double_indices, close_indices = event_indices(positions)
-#positions[single_indices, 2:] = -1.0
-#positions[single_indices, :2] /= 16 # Scale to mm instead of pixels
-#positions[double_indices] /= 16
+positions = normalize_position_data(positions)
 
 # Split indices into training and test sets
 x_idx = np.arange(images.shape[0])
@@ -69,7 +64,7 @@ with tf.device('/GPU:2'):
             )
     cb_earlystopping = tf.keras.callbacks.EarlyStopping(
             monitor='val_loss', 
-            patience=2,
+            patience=3,
             )
 
 
@@ -83,7 +78,7 @@ with tf.device('/GPU:2'):
 
     # Parameters for the model
     batch_size = 32
-    epochs = 5
+    epochs = 10
 
     history = model.fit(
             normalize_image_data(images[train_idx]),
