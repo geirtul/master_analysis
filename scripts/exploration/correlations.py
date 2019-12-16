@@ -35,15 +35,16 @@ plt.imshow(corr_matrix)
 plt.xticks(np.arange(len(ticks)), ticks)
 plt.yticks(np.arange(len(ticks)), ticks)
 plt.colorbar()
+plt.title("Correlation matrix for target positions and energies")
 plt.savefig("corr_matrix.pdf")
 plt.clf()
 
-plt.scatter(energies[indices,0], energies[indices,1])
-plt.savefig("scatter_e.pdf")
-plt.clf()
+#plt.scatter(energies[indices,0], energies[indices,1], alpha=0.2)
+#plt.savefig("scatter_e.pdf")
+#plt.clf()
 
-plt.scatter(rel_dist[indices], rel_e[indices])
-plt.savefig("scatter_rel.pdf")
-plt.clf()
+#plt.scatter(rel_dist[indices], rel_e[indices], alpha=0.2)
+#plt.savefig("scatter_rel.pdf")
+#plt.clf()
 
 
