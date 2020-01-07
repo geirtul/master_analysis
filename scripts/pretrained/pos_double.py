@@ -59,8 +59,11 @@ with tf.device('/GPU:2'):
     elif net == "resnet50":
         model = pretrained_resnet50()
 
+    # Add regression layer
+    model.add(Dense(4, activation="linear"))
+    print(model.summary())
+    
     # Setup callback for saving models
-    # TODO
     fpath = MODEL_PATH + "pretrained_{net}_pos_double_" + "r2_{val_r2_keras:.2f}.hdf5"
 
     # Callbacks
@@ -72,7 +75,7 @@ with tf.device('/GPU:2'):
             )
     cb_earlystopping = tf.keras.callbacks.EarlyStopping(
             monitor='val_loss', 
-            patience=2,
+            patience=4,
             )
 
     # Compile model
