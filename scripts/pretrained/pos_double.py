@@ -8,10 +8,10 @@ from master_data_functions.functions import *
 from master_models.prediction import *
 from master_models.pretrained import *
 from sklearn.model_selection import train_test_split, StratifiedKFold
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Flatten, Activation
-from keras.layers import Conv2D, MaxPooling2D
-from keras import backend
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Flatten, Activation
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.keras import backend
 
 # PATH variables
 DATA_PATH = "../../data/simulated/"
