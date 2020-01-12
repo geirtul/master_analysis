@@ -21,6 +21,7 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 # ================== Import Data ==================
 images = np.load(DATA_PATH + "images_noscale_200k.npy")
 positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
+images = tf.image.resize_with_pad(images, 224, 224)
 #energies = np.load(DATA_PATH + "energies_noscale_200k.npy")
 #images = normalize_image_data(images)
 #images = np.load(DATA_PATH + "images_1M.npy")
@@ -88,16 +89,17 @@ with tf.device('/GPU:2'):
     batch_size = 32
     epochs = 10
 
-    history = model.fit(
-            normalize_image_data(images[train_idx]),
-            positions[train_idx],
-            batch_size=batch_size,
-            epochs=epochs,
-            validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
-            callbacks=[cb_earlystopping]
-            )
+    #history = model.fit(
+    #        normalize_image_data(images[train_idx]),
+    #        positions[train_idx],
+    #        batch_size=batch_size,
+    #        epochs=epochs,
+    #        validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
+    #        callbacks=[cb_earlystopping]
+    #        )
 
     # Predict and save predictions to go with the rest of the test data.
-    #y_pred = model.predict(normalize_image_data(images[test_idx]))
+    y_pred = model.predict(normalize_image_data(images[test_idx]))
+    print("R2: ", r2_keras(positions[test_idx], y_pred))
     #np.save("test_y_pred_1M.npy", y_pred)
 
