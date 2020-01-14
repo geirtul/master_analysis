@@ -21,7 +21,12 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 # ================== Import Data ==================
 images = np.load(DATA_PATH + "images_noscale_200k.npy")
 positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
-images = tf.image.resize_with_pad(images, 224, 224)
+images = np.pad(images, pad_width=224-16)
+print("Shape after padding: ", images.shape)
+exit(1)
+images = np.concatenate((images, images, images), axis=-1)
+images = tf.image.resize_image_with_pad(images, 224, 224)
+
 #energies = np.load(DATA_PATH + "energies_noscale_200k.npy")
 #images = normalize_image_data(images)
 #images = np.load(DATA_PATH + "images_1M.npy")
@@ -32,7 +37,7 @@ single_indices, double_indices, close_indices = event_indices(positions)
 positions = normalize_position_data(positions)
 
 # Split indices into training and test sets
-x_idx = np.arange(images.shape[0])
+x_idx = np.arange(int(images.shape[0]))
 train_idx, test_idx, not_used1, not_used2 = train_test_split(
         double_indices, 
         double_indices, 
@@ -56,7 +61,7 @@ def r2_keras(y_true, y_pred):
 net = "vgg16"
 with tf.device('/GPU:2'):
     if net == "vgg16":
-        model = pretrained_vgg16()
+        model = pretrained_vgg16((224,224,3))
     elif net == "resnet50":
         model = pretrained_resnet50()
 
@@ -99,7 +104,9 @@ with tf.device('/GPU:2'):
     #        )
 
     # Predict and save predictions to go with the rest of the test data.
-    y_pred = model.predict(normalize_image_data(images[test_idx]))
-    print("R2: ", r2_keras(positions[test_idx], y_pred))
+    test = normalize_image_data(images[test_idx])
+    print(np.shape(test))
+    #y_pred = model.predict(normalize_image_data(images[test_idx]))
+    #print("R2: ", r2_keras(positions[test_idx], y_pred))
     #np.save("test_y_pred_1M.npy", y_pred)
 
