@@ -21,11 +21,8 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 # ================== Import Data ==================
 images = np.load(DATA_PATH + "images_noscale_200k.npy")
 positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
-images = np.pad(images, pad_width=224-16)
-print("Shape after padding: ", images.shape)
-exit(1)
-images = np.concatenate((images, images, images), axis=-1)
-images = tf.image.resize_image_with_pad(images, 224, 224)
+
+#images = tf.image.resize_image_with_pad(images, 224, 224)
 
 #energies = np.load(DATA_PATH + "energies_noscale_200k.npy")
 #images = normalize_image_data(images)
@@ -44,6 +41,14 @@ train_idx, test_idx, not_used1, not_used2 = train_test_split(
         test_size = 0.2
         ) 
 
+# Normalize the pixel values before padding and concatenating
+images[train_idx] = normalize_image_data(images[train_idx])
+images[test_idx] = normalize_image_data(images[test_idx])
+padding = (224-16)//2 # pad to 224x224 size which is vgg16 default input
+images = np.pad(images, (0,padding,padding,0))
+print("Shape after padding: ", images.shape)
+images = np.concatenate((images, images, images), axis=-1)
+print("Shape after concatenate: ", images.shape)
 # Save training and test indices, and also the test set
 #np.save("train_idx.npy", train_idx)
 #np.save("test_idx.npy", test_idx)
