@@ -45,7 +45,7 @@ train_idx, test_idx, not_used1, not_used2 = train_test_split(
 images[train_idx] = normalize_image_data(images[train_idx])
 images[test_idx] = normalize_image_data(images[test_idx])
 padding = (224-16)//2 # pad to 224x224 size which is vgg16 default input
-images = np.pad(images, (0,padding,padding,0))
+images = np.pad(images, ((0,0),(padding, padding),(padding, padding),(0, 0)))
 print("Shape after padding: ", images.shape)
 images = np.concatenate((images, images, images), axis=-1)
 print("Shape after concatenate: ", images.shape)
