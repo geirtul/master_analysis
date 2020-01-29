@@ -19,8 +19,10 @@ OUTPUT_PATH = "../../data/output/"
 MODEL_PATH = OUTPUT_PATH + "models/"
 
 # ================== Import Data ==================
-images = np.load(DATA_PATH + "images_noscale_200k.npy")
-positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
+images = np.load(DATA_PATH + "images_20k.npy").astype(np.float32)
+positions = np.load(DATA_PATH + "positions_20k.npy")
+#images = np.load(DATA_PATH + "images_noscale_20k.npy")
+#positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
 
 #images = tf.image.resize_image_with_pad(images, 224, 224)
 
@@ -58,13 +60,15 @@ print("Shape after concatenate: ", images.shape)
 # ================== Custom Functions ==================
 # Define R2 score for metrics since it's not available by default
 def r2_keras(y_true, y_pred):
+    y_true = tf.convert_to_tensor(y_true, np.float32)
+    y_pred = tf.convert_to_tensor(y_pred, np.float32)
     SS_res =  backend.sum(backend.square(y_true - y_pred)) 
     SS_tot = backend.sum(backend.square(y_true - backend.mean(y_true))) 
     return ( 1 - SS_res/(SS_tot + backend.epsilon()) )
 
 # ================== Model ==================
 net = "vgg16"
-with tf.device('/GPU:2'):
+with tf.device('/CPU'):
     if net == "vgg16":
         model = pretrained_vgg16((224,224,3))
     elif net == "resnet50":
@@ -99,19 +103,17 @@ with tf.device('/GPU:2'):
     batch_size = 32
     epochs = 10
 
-    #history = model.fit(
-    #        normalize_image_data(images[train_idx]),
-    #        positions[train_idx],
-    #        batch_size=batch_size,
-    #        epochs=epochs,
-    #        validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
-    #        callbacks=[cb_earlystopping]
-    #        )
+    history = model.fit(
+            normalize_image_data(images[train_idx]),
+            positions[train_idx],
+            batch_size=batch_size,
+            epochs=epochs,
+            validation_data=(normalize_image_data(images[test_idx]), positions[test_idx]),
+            callbacks=[cb_earlystopping]
+            )
 
     # Predict and save predictions to go with the rest of the test data.
-    test = normalize_image_data(images[test_idx])
-    print(np.shape(test))
-    #y_pred = model.predict(normalize_image_data(images[test_idx]))
-    #print("R2: ", r2_keras(positions[test_idx], y_pred))
+    y_pred = model.predict(normalize_image_data(images[test_idx]))
+    print("R2: ", r2_keras(positions[test_idx], y_pred))
     #np.save("test_y_pred_1M.npy", y_pred)
 
