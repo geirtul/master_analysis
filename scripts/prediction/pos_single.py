@@ -13,7 +13,11 @@ from tensorflow.keras import backend
 # Determine tensorflow device
 # Checks for GPU availability and sets DEVICE
 DEVICE = ""
-gpu_devices = tf.config.list_physical_devices('GPU')
+# Hacky but works for checking if version is < 2 for ML-servers
+if tf.__version__[0] < 2:
+    gpu_devices = tf.config.experimental.list_physical_devices('GPU')
+else:
+    gpu_devices = tf.config.list_physical_devices('GPU')
 if gpu_devices:
     nvidia-command = [
             "nvidia-smi",
