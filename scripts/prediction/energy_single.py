@@ -82,7 +82,7 @@ with tf.device('/GPU:2'):
             batch_size=batch_size,
             epochs=epochs,
             validation_data=(normalize_image_data(images[test_idx]), energies[test_idx,0]),
-            callbacks=[cb_earlystopping]
+            callbacks=[cb_earlystopping, cb_save]
             )
 
     # Predict and save predictions to go with the rest of the test data.

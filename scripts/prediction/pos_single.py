@@ -81,11 +81,12 @@ with tf.device('/GPU:2'):
             positions[train_idx,:2],
             batch_size=batch_size,
             epochs=epochs,
-            validation_data=(normalize_image_data(images[test_idx]), positions[test_idx,:2]),
-            callbacks=[cb_earlystopping]
+            validation_split=0.2,
+            callbacks=[cb_earlystopping, cb_save]
             )
 
     # Predict and save predictions to go with the rest of the test data.
-    #y_pred = model.predict(normalize_image_data(images[test_idx]))
+    y_pred = model.predict(normalize_image_data(images[test_idx]))
+    print("Out of sample r2:", r2_keras(positions[test_idx, :2], y_pred))
     #np.save("test_y_pred_1M.npy", y_pred)
 
