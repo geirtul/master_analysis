@@ -1,8 +1,11 @@
 # Imports
+import warnings
+warnings.filterwarnings('ignore',category=FutureWarning)
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
 import sys
+import re
 import subprocess
 import matplotlib.pyplot as plt
 from master_data_functions.functions import *
@@ -12,23 +15,40 @@ from tensorflow.keras import backend
 
 # Determine tensorflow device
 # Checks for GPU availability and sets DEVICE
-DEVICE = ""
+DEVICE = None
+MAX_LOAD = 20 # maximum GPU-util 20%
 # Hacky but works for checking if version is < 2 for ML-servers
-if tf.__version__[0] < 2:
-    gpu_devices = tf.config.experimental.list_physical_devices('GPU')
+if int(tf.__version__[0]) < 2:
+    gpu_devices = tf.config.experimental.list_logical_devices('GPU')
+    cpu_devices = tf.config.experimental.list_logical_devices('CPU')
 else:
-    gpu_devices = tf.config.list_physical_devices('GPU')
+    gpu_devices = tf.config.list_logical_devices('GPU')
+    cpu_devices = tf.config.list_logical_devices('CPU')
+
+
 if gpu_devices:
-    nvidia-command = [
+    nvidia_command = [
             "nvidia-smi",
             "--query-gpu=index,utilization.gpu",
             "--format=csv"]
-    gpu_load = subprocess.run(nvidia-command, capture_output=True)
-    
-if not gpu_devices:
-    cpu_devices = tf.config.list_physical_devices('CPU')
-    
-
+    nvidia_output = subprocess.run(nvidia_command, text=True, capture_output=True).stdout
+    gpu_loads = np.array(re.findall(r"(\d+), (\d+) %", nvidia_output),
+    dtype=np.int) # tuple (id, load%)
+    eligible_gpu = np.where(gpu_loads[:,1] < MAX_LOAD)
+    if len(eligible_gpu[0]) == 0:
+        print("No GPUs with less than 20% load. Check nvidia-smi.")
+        exit(0)
+    else:
+        # Choose the highest id eligible GPU
+        # Assuming a lot of people use default allocation which is
+        # lowest id.
+        gpu_id = np.amax(gpu_loads[eligible_gpu,0])
+        DEVICE = gpu_devices[gpu_id].name
+        print("CHOSEN GPU IS:", DEVICE)
+else:
+    # Default to CPU
+    DEVICE = cpu_devices[0].name
+    print("NO GPU FOUND, DEFAULTING TO CPU.")
 
 # PATH variables
 DATA_PATH = "../../data/simulated/"
@@ -69,7 +89,7 @@ def r2_keras(y_true, y_pred):
     return ( 1 - SS_res/(SS_tot + backend.epsilon()) )
 
 # ================== Model ==================
-with tf.device('/GPU:2'):
+with tf.device(DEVICE):
     model = position_single_cnn()
     # Setup callback for saving models
     fpath = MODEL_PATH + "cnn_pos_single_" + "r2_{val_r2_keras:.2f}.hdf5"
