@@ -3,11 +3,28 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
 import sys
+import subprocess
 import matplotlib.pyplot as plt
 from master_data_functions.functions import *
 from master_models.prediction import *
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from tensorflow.keras import backend
+
+# Determine tensorflow device
+# Checks for GPU availability and sets DEVICE
+DEVICE = ""
+gpu_devices = tf.config.list_physical_devices('GPU')
+if gpu_devices:
+    nvidia-command = [
+            "nvidia-smi",
+            "--query-gpu=index,utilization.gpu",
+            "--format=csv"]
+    gpu_load = subprocess.run(nvidia-command, capture_output=True)
+    
+if not gpu_devices:
+    cpu_devices = tf.config.list_physical_devices('CPU')
+    
+
 
 # PATH variables
 DATA_PATH = "../../data/simulated/"

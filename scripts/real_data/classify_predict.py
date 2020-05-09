@@ -24,12 +24,12 @@ single_energy_model = tf.keras.models.load_model(single_energy_model_path)
 single_position_model = tf.keras.models.load_model(single_position_model_path)
 
 for event_id in data.keys():
-    event_classification = classifier.predict(data[event_id][image])
+    event_classification = classifier.predict(data[event_id]['image'])
     data[event_id]["event_class"] = event_classification.argmax(axis=-1)
     # If classified as single event, predict energy and position
-    if data[€vent_id]["event_class"] == 0:
-        event_energy = single_energy_model.predict(data[event_id][image])
-        event_position = single_position_model.predict(data[event_id][image])
+    if data[event_id]["event_class"] == 0:
+        event_energy = single_energy_model.predict(data[event_id]['image'])
+        event_position = single_position_model.predict(data[event_id]['image'])
         data[event_id]["predicted_energy"] = event_energy
         data[event_id]["predicted_position"] = event_position
 
