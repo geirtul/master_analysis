@@ -24,8 +24,8 @@ OUTPUT_PATH = "../../data/output/"
 MODEL_PATH = OUTPUT_PATH + "models/"
 
 # ================== Import Data ==================
-images = np.load(DATA_PATH + "images_noscale_200k.npy")
-positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
+images = np.load(DATA_PATH + "images_full.npy")
+positions = np.load(DATA_PATH + "positions_full.npy")
 #images = normalize_image_data(images)
 #images = np.load(DATA_PATH + "images_1M.npy")
 #positions = np.load(DATA_PATH + "positions_1M.npy")
@@ -51,19 +51,6 @@ train_idx, val_idx, not_used3, not_used4 = train_test_split(
         test_size = 0.2
         ) 
 
-# Save training and test indices, and also the test set
-#np.save("train_idx.npy", train_idx)
-#np.save("test_idx.npy", test_idx)
-#np.save("test_images__double_1M.npy", images[test_idx])
-#np.save("test_positions_double_1M.npy", positions[test_idx])
-#np.save("test_energies_double_1M.npy", energies[test_idx])
-# ================== Custom Functions ==================
-# Define R2 score for metrics since it's not available by default
-def r2_keras(y_true, y_pred):
-    SS_res =  backend.sum(backend.square(y_true - y_pred)) 
-    SS_tot = backend.sum(backend.square(y_true - backend.mean(y_true))) 
-    return ( 1 - SS_res/(SS_tot + backend.epsilon()) )
-
 # ================== Model ==================
 with tf.device(DEVICE):
     model = position_single_cnn()
@@ -82,7 +69,6 @@ with tf.device(DEVICE):
             )
 
     cb_r2 = R2ScoreCallback(val_data)
-
     # Compile model
     ## Custom optimizer
     #curr_adam = tf.keras.optimizers.Adam(lr=lmbda)
@@ -102,4 +88,6 @@ with tf.device(DEVICE):
             verbose=2,
             callbacks=[cb_earlystopping, cb_save, cb_r2]
             )
-
+    test_predictions = model.predict(normalize_image_data(images[test_idx]))
+    test_r2 = cb_r2.r2_score(test_predictions, positions[test_idx, :2])
+    print("test_r2:", test_r2)
