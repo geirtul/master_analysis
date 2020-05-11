@@ -65,7 +65,8 @@ with tf.device(DEVICE):
             )
     cb_earlystopping = tf.keras.callbacks.EarlyStopping(
             monitor='val_loss', 
-            patience=3,
+            patience=2,
+            restore_best_weights=True,
             )
 
     cb_r2 = R2ScoreCallback(val_data)
@@ -86,7 +87,7 @@ with tf.device(DEVICE):
             epochs=epochs,
             validation_data=val_data,
             verbose=2,
-            callbacks=[cb_earlystopping, cb_save, cb_r2]
+            callbacks=[cb_earlystopping, cb_r2]
             )
     test_predictions = model.predict(normalize_image_data(images[test_idx]))
     test_r2 = cb_r2.r2_score(test_predictions, positions[test_idx, :2])
