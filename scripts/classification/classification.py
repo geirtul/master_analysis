@@ -30,6 +30,7 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 images = np.load(DATA_PATH + "images_full.npy")
 positions = np.load(DATA_PATH + "positions_full.npy")
 labels = np.load(DATA_PATH + "labels_full.npy")
+labels = to_categorical(labels)
 #images = normalize_image_data(images)
 #images = np.load(DATA_PATH + "images_1M.npy")
 #positions = np.load(DATA_PATH + "positions_1M.npy")
