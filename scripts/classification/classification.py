@@ -29,6 +29,7 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 # ================== Import Data ==================
 images = np.load(DATA_PATH + "images_full.npy")
 positions = np.load(DATA_PATH + "positions_full.npy")
+labels = np.load(DATA_PATH + "labels_full.npy")
 #images = normalize_image_data(images)
 #images = np.load(DATA_PATH + "images_1M.npy")
 #positions = np.load(DATA_PATH + "positions_1M.npy")
