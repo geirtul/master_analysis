@@ -45,8 +45,8 @@ positions = normalize_position_data(positions)
 # "final score" after training
 x_idx = np.arange(images.shape[0])
 trainval_idx, test_idx, not_used1, not_used2 = train_test_split(
-        single_indices, 
-        single_indices, 
+        x_idx, 
+        x_idx, 
         test_size = 0.2
         ) 
 
