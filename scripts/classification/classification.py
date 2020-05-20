@@ -81,11 +81,11 @@ with tf.device(DEVICE):
     #kfold_labels = labels.argmax(axis=-1) # StratifiedKFold doesn't take one-hot
     # Define device scope and fit the data
     model.fit(
-            images[train_idx], 
+            normalize_image_data(images[train_idx]), 
             labels[train_idx],
             epochs=epochs, 
             batch_size=batch_size,
-            validation_data=(images[val_idx], labels[val_idx]),
+            validation_data=(normalize_image_data(images[val_idx]), labels[val_idx]),
             callbacks=[cb_save, cb_earlystopping],
             )
     model_eval = model.evaluate(
