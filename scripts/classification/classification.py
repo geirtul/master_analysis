@@ -87,7 +87,6 @@ with tf.device(DEVICE):
             batch_size=batch_size,
             validation_data=(images[val_idx], labels[val_idx]),
             callbacks=[cb_save, cb_earlystopping],
-            verbose=2,
             )
     model_eval = model.evaluate(
             normalize_image_data(images[test_idx]), 
