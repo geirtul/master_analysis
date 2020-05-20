@@ -19,7 +19,7 @@ config = {
     "OUTPUT_PATH": "../../data/output/",
     "CLASSIFIER": "Project-0.97.hdf5",                      
     "SINGLE_ENERGY_MODEL": "cnn_energy_single_r2_0.97.hdf5",    
-    "SINGLE_POSITION_MODEL": "cnn_pos_single_r2_0.99.hdf5",
+    "SINGLE_POSITION_MODEL": "cnn_pos_single_mse_0.00083.hdf5",
     "DOUBLE_ENERGY_MODEL": "double_energy_model_name.hdf5",    
     "DOUBLE_POSITION_MODEL": "double_position_model_name.hdf5" 
 }
