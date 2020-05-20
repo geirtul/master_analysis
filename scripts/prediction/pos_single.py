@@ -66,6 +66,7 @@ with tf.device(DEVICE):
     cb_earlystopping = tf.keras.callbacks.EarlyStopping(
             monitor='val_loss', 
             patience=2,
+            verbose=1,
             restore_best_weights=True,
             )
 
@@ -79,7 +80,7 @@ with tf.device(DEVICE):
 
     # Parameters for the model
     batch_size = 32
-    epochs = 10
+    epochs = 20
     history = model.fit(
             normalize_image_data(images[train_idx]),
             positions[train_idx,:2],
@@ -87,7 +88,7 @@ with tf.device(DEVICE):
             epochs=epochs,
             validation_data=val_data,
             verbose=2,
-            callbacks=[cb_earlystopping, cb_r2]
+            callbacks=[cb_r2, cb_earlystopping, cb_save]
             )
     test_predictions = model.predict(normalize_image_data(images[test_idx]))
     test_r2 = cb_r2.r2_score(test_predictions, positions[test_idx, :2])
