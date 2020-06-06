@@ -8,9 +8,9 @@ import sys
 import re
 import subprocess
 import matplotlib.pyplot as plt
-from master_data_functions.functions import *
-from master_models.prediction import *
-from analysis_functions.callbacks import *
+from master_scripts.data_functions import *
+from master_scripts.models_prediction import *
+from master_scripts.callbacks import *
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from tensorflow.keras import backend
 
