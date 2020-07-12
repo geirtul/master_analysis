@@ -1,0 +1,52 @@
+{
+  "loss": "binary_crossentropy",
+  "optimizer": "{'name': 'Adam', 'learning_rate': 0.001, 'decay': 0.0, 'beta_1': 0.9, 'beta_2': 0.999, 'epsilon': 1e-07, 'amsgrad': False}",
+  "experiment_config": {
+    "fit_args": {
+      "batch_size": 32,
+      "epochs": 1
+    },
+    "kfold_args": {
+      "n_splits": 5,
+      "shuffle": false
+    },
+    "path_args": {
+      "repo_root": "/shared/users/geirtul/git/master_analysis/",
+      "models": "/shared/users/geirtul/git/master_analysis/models/",
+      "figures": "/shared/users/geirtul/git/master_analysis/figures/",
+      "experiments": "/shared/users/geirtul/git/master_analysis/experiments/",
+      "results": "/shared/users/geirtul/git/master_analysis/results",
+      "model_config": "/shared/users/geirtul/git/master_analysis/experiments/model_config/"
+    },
+    "random_seed": 120
+  },
+  "experiment_type": "hparam_classification",
+  "experiment_id": "b0b6ba0fd5af",
+  "datetime": "2020-07-12 16:07:01",
+  "history": {
+    "loss": [
+      0.48755231499671936
+    ],
+    "accuracy": [
+      0.7487999796867371
+    ],
+    "val_loss": [
+      0.47572147846221924
+    ],
+    "val_accuracy": [
+      0.7567999958992004
+    ]
+  },
+  "metrics": {
+    "accuracy": 0.7568,
+    "confusion_matrix": {
+      "TN": 930,
+      "TP": 320,
+      "FN": 288,
+      "FP": 962
+    },
+    "f1_score": 0.7598736176935229,
+    "matthews_corrcoef": 0.5137683792142728,
+    "roc_auc_score": 0.8495552
+  }
+}
