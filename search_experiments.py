@@ -44,8 +44,7 @@ for e in experiments:
     found = search_dict(searchkey, e)
     results[e['experiment_id']] = found[0]
 
-
-# Sort the results by value
+    # Sort the results by value
 results_sorted = {k: results[k] for k in sorted(results, key=results.get,
                                                 reverse=True)}
 
