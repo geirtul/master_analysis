@@ -31,7 +31,7 @@ indices = np.random.choice(
     replace=False)
 images = images[indices]
 images = images.reshape(images.shape[0], 16, 16, 1)
-labels = np.load(DATA_PATH + "labels_200k.npy")
+labels = np.load(DATA_PATH + "labels_200k.npy")[indices]
 
 x_idx = np.arange(images.shape[0])
 train_idx, val_idx, u1, u2 = train_test_split(
