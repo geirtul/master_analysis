@@ -55,7 +55,7 @@ with tf.device(get_tf_device(20)):
                     )
                 )
                 model.add(Flatten())
-                model.add(Dense(128, activation='relu'))
+                model.add(Dense(d_size, activation='relu'))
                 model.add(Dense(1, activation='sigmoid'))
 
                 model.compile(
