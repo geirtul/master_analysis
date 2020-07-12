@@ -17,7 +17,7 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 1,
+        'epochs': 20,
         'batch_size': 32,
     },
     'random_seed': 120,
@@ -25,13 +25,8 @@ config = {
 
 # ================== Import Data ==================
 images = np.load(DATA_PATH + "images_200k.npy")
-indices = np.random.choice(
-    np.arange(images.shape[0]),
-    10000,
-    replace=False)
-images = images[indices]
 images = images.reshape(images.shape[0], 16, 16, 1)
-labels = np.load(DATA_PATH + "labels_200k.npy")[indices]
+labels = np.load(DATA_PATH + "labels_200k.npy")
 
 x_idx = np.arange(images.shape[0])
 train_idx, val_idx, u1, u2 = train_test_split(
@@ -39,8 +34,8 @@ train_idx, val_idx, u1, u2 = train_test_split(
 )
 
 # ================== Search params ================
-num_filters = [4, 8]
-kernel_sizes = [(3, 3), (5, 5)]  # , (7, 7), (9, 9)]
+num_filters = [4, 8, 16, 32, 64]
+kernel_sizes = [(3, 3), (5, 5), (7, 7), (9, 9)]
 dense_sizes = [32, 64, 128, 256]
 
 with tf.device(get_tf_device(20)):
@@ -48,34 +43,36 @@ with tf.device(get_tf_device(20)):
     models = []
     for n_filters in num_filters:
         for k_size in kernel_sizes:
-            model = Sequential()
-            model.add(
-                Conv2D(
-                    filters=n_filters,
-                    kernel_size=k_size,
-                    input_shape=images.shape[1:],
-                    padding='same',
-                    activation='relu',
+            for d_size in dense_sizes:
+                model = Sequential()
+                model.add(
+                    Conv2D(
+                        filters=n_filters,
+                        kernel_size=k_size,
+                        input_shape=images.shape[1:],
+                        padding='same',
+                        activation='relu',
+                    )
                 )
-            )
-            model.add(Flatten())
-            model.add(Dense(128, activation='relu'))
-            model.add(Dense(1, activation='sigmoid'))
+                model.add(Flatten())
+                model.add(Dense(128, activation='relu'))
+                model.add(Dense(1, activation='sigmoid'))
 
-            model.compile(
-                optimizer='adam',
-                loss='binary_crossentropy',
-                metrics=['accuracy']
-            )
+                model.compile(
+                    optimizer='adam',
+                    loss='binary_crossentropy',
+                    metrics=['accuracy']
+                )
 
-            models.append(model)
+                models.append(model)
 
     # Run experiments
     for model in models:
         experiment = Experiment(
-            experiment_type="hparam_classification",
             model=model,
             config=config,
+            model_type="classification",
+            experiment_name="architecture_search"
         )
         experiment.run(
             normalize_image_data(images[train_idx]),
