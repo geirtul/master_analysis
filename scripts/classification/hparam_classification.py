@@ -24,9 +24,9 @@ config = {
 }
 
 # ================== Import Data ==================
-# images = np.load(DATA_PATH + "images_200k.npy")
+images = np.load(DATA_PATH + "images_200k.npy")
 images = np.random.choice(
-    np.load(DATA_PATH + "images_200k.npy"),
+    np.arange(images.shape[0]),
     10000,
     replace=False)
 images = images.reshape(images.shape[0], 16, 16, 1)
