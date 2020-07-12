@@ -3,6 +3,7 @@ from master_scripts.classes import Experiment
 from master_scripts.data_functions import normalize_image_data
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Flatten
+from sklearn.model_selection import train_test_split
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -12,27 +13,24 @@ DATA_PATH = "../../data/simulated/"
 OUTPUT_PATH = "../../data/output/"
 MODEL_PATH = OUTPUT_PATH + "models/"
 
-# ================== Import Data ==================
-img_train = np.load(DATA_PATH + "images_200k_train.npy")
-img_val = np.load(DATA_PATH + "images_200k_val.npy")
-y_train = np.load(DATA_PATH + "labels_200k_train.npy")[:10]
-y_val = np.load(DATA_PATH + "labels_200k_val.npy")
-
-# Reshape and normalize images
-img_train = normalize_image_data(
-    img_train.reshape(img_train.shape[0], 16, 16, 1)
-)[:10]
-img_val = normalize_image_data(
-    img_val.reshape(img_val.shape[0], 16, 16, 1)
-)
-
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 1,
+        'epochs': 10,
         'batch_size': 32,
     },
+    'random_seed': 120,
 }
+
+# ================== Import Data ==================
+images = np.load(DATA_PATH + "images_200k.npy")
+images = images.reshape(images.shape[0], 16, 16, 1)
+labels = np.load(DATA_PATH + "labels_200k.npy")
+
+x_idx = np.arange(images.shape[0])
+train_idx, val_idx, u1, u2 = train_test_split(
+    x_idx, x_idx, random_state=config['random_seed']
+)
 
 # ================== Search params ================
 num_filters = [4, 8]
@@ -44,9 +42,14 @@ models = []
 for n_filters in num_filters:
     for k_size in kernel_sizes:
         model = Sequential()
-        model.add(Conv2D(
-            n_filters, k_size, input_shape=img_train.shape[1:],
-            padding='same', activation='relu')
+        model.add(
+            Conv2D(
+                filters=n_filters,
+                kernel_size=k_size,
+                input_shape=images.shape[1:],
+                padding='same',
+                activation='relu',
+            )
         )
         model.add(Flatten())
         model.add(Dense(128, activation='relu'))
@@ -67,5 +70,10 @@ for model in models:
         model=model,
         config=config,
     )
-    experiment.run(img_train, y_train, img_val, y_val)
-    experiment.output_experiment()
+    experiment.run(
+        normalize_image_data(images[train_idx]),
+        labels[train_idx],
+        normalize_image_data(images[val_idx]),
+        labels[val_idx],
+    )
+    experiment.save()
