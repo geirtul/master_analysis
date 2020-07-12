@@ -17,14 +17,18 @@ MODEL_PATH = OUTPUT_PATH + "models/"
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 10,
+        'epochs': 1,
         'batch_size': 32,
     },
     'random_seed': 120,
 }
 
 # ================== Import Data ==================
-images = np.load(DATA_PATH + "images_200k.npy")
+# images = np.load(DATA_PATH + "images_200k.npy")
+images = np.random.choice(
+    np.load(DATA_PATH + "images_200k.npy"),
+    10000,
+    replace=False)
 images = images.reshape(images.shape[0], 16, 16, 1)
 labels = np.load(DATA_PATH + "labels_200k.npy")
 
