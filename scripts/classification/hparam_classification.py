@@ -25,10 +25,11 @@ config = {
 
 # ================== Import Data ==================
 images = np.load(DATA_PATH + "images_200k.npy")
-images = np.random.choice(
+indices = np.random.choice(
     np.arange(images.shape[0]),
     10000,
     replace=False)
+images = images[indices]
 images = images.reshape(images.shape[0], 16, 16, 1)
 labels = np.load(DATA_PATH + "labels_200k.npy")
 
