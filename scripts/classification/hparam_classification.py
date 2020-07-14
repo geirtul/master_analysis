@@ -6,6 +6,7 @@ from tensorflow.keras.layers import Conv2D, Dense, Flatten
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import numpy as np
+import json
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
 
@@ -34,10 +35,12 @@ train_idx, val_idx, u1, u2 = train_test_split(
 )
 
 # ================== Search params ================
+# TODO: Add these to a structured output for easy plotting of hp-search
 num_filters = [4, 8, 16, 32, 64]
 kernel_sizes = [(3, 3), (5, 5), (7, 7), (9, 9)]
 dense_sizes = [32, 64, 128, 256]
 
+id_param = {}
 with tf.device(get_tf_device(20)):
     # Build models
     models = []
@@ -66,18 +69,24 @@ with tf.device(get_tf_device(20)):
 
                 models.append(model)
 
-    # Run experiments
-    for model in models:
-        experiment = Experiment(
-            model=model,
-            config=config,
-            model_type="classification",
-            experiment_name="architecture_search"
-        )
-        experiment.run(
-            normalize_image_data(images[train_idx]),
-            labels[train_idx],
-            normalize_image_data(images[val_idx]),
-            labels[val_idx],
-        )
-        experiment.save()
+                # Run experiment
+                experiment = Experiment(
+                    model=model,
+                    config=config,
+                    model_type="classification",
+                    experiment_name="architecture_search"
+                )
+                experiment.run(
+                    normalize_image_data(images[train_idx]),
+                    labels[train_idx],
+                    normalize_image_data(images[val_idx]),
+                    labels[val_idx],
+                )
+                experiment.save()
+                id_param[experiment.experiment_id] = {
+                    'filters': n_filters,
+                    'kernel_size': k_size,
+                    'dense_size': d_size,
+                }
+with open("architecture_search.json", "w") as fp:
+    json.dump(id_param, fp)
