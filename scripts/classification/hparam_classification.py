@@ -35,11 +35,12 @@ train_idx, val_idx, u1, u2 = train_test_split(
 )
 
 # ================== Search params ================
-# TODO: Add these to a structured output for easy plotting of hp-search
 num_filters = [4, 8, 16, 32, 64]
 kernel_sizes = [(3, 3), (5, 5), (7, 7), (9, 9)]
 dense_sizes = [32, 64, 128, 256]
 
+# set tf random seed
+tf.random.set_seed(config['random_seed'])
 id_param = {}
 with tf.device(get_tf_device(20)):
     # Build models
