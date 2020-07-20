@@ -90,4 +90,4 @@ with tf.device(get_tf_device(20)):
                     'dense_size': d_size,
                 }
 with open("architecture_search.json", "w") as fp:
-    json.dump(id_param, fp)
+    json.dump(id_param, fp, indent=2)
