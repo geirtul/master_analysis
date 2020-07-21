@@ -21,7 +21,7 @@ config = {
 }
 
 # ================== Import Data ==================
-DATA_PATH = get_git_root + "data/simulated/"
+DATA_PATH = get_git_root() + "data/simulated/"
 images = np.load(DATA_PATH + "images_200k.npy")
 images = images.reshape(images.shape[0], 16, 16, 1)
 labels = np.load(DATA_PATH + "labels_200k.npy")
@@ -97,6 +97,6 @@ with tf.device(get_tf_device(20)):
                     'kernel_size': (3, 3),
                     'dense_size': d_size,
                 }
-search_path = get_git_root + "experiments/searches/"
+search_path = get_git_root() + "experiments/searches/"
 with open(search_path + search_name + ".json", "w") as fp:
     json.dump(id_param, fp, indent=2)
