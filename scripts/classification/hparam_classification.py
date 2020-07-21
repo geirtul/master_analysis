@@ -1,19 +1,15 @@
 # Imports
 from master_scripts.classes import Experiment
-from master_scripts.data_functions import normalize_image_data, get_tf_device
+from master_scripts.data_functions import (normalize_image_data, get_tf_device,
+                                           get_git_root)
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, Dense, Flatten
+from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPool2D
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import numpy as np
 import json
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
-
-# PATH variables
-DATA_PATH = "../../data/simulated/"
-OUTPUT_PATH = "../../data/output/"
-MODEL_PATH = OUTPUT_PATH + "models/"
 
 # ================== Config =======================
 config = {
@@ -36,23 +32,33 @@ train_idx, val_idx, u1, u2 = train_test_split(
 
 # ================== Search params ================
 num_filters = [4, 8, 16, 32, 64]
-kernel_sizes = [(3, 3), (5, 5), (7, 7), (9, 9)]
 dense_sizes = [32, 64, 128, 256]
 
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
 id_param = {}
+search_name = "architecture_search_seeded_2conv"
 with tf.device(get_tf_device(20)):
     # Build models
     models = []
-    for n_filters in num_filters:
-        for k_size in kernel_sizes:
+    for n_filters1 in num_filters:
+        for n_filters2 in num_filters:
             for d_size in dense_sizes:
                 model = Sequential()
                 model.add(
                     Conv2D(
-                        filters=n_filters,
-                        kernel_size=k_size,
+                        filters=n_filters1,
+                        kernel_size=(3, 3),
+                        input_shape=images.shape[1:],
+                        padding='same',
+                        activation='relu',
+                    )
+                )
+                model.add(MaxPool2D(padding='same'))
+                model.add(
+                    Conv2D(
+                        filters=n_filters2,
+                        kernel_size=(3, 3),
                         input_shape=images.shape[1:],
                         padding='same',
                         activation='relu',
@@ -75,7 +81,7 @@ with tf.device(get_tf_device(20)):
                     model=model,
                     config=config,
                     model_type="classification",
-                    experiment_name="architecture_search"
+                    experiment_name=search_name
                 )
                 experiment.run(
                     normalize_image_data(images[train_idx]),
@@ -85,9 +91,11 @@ with tf.device(get_tf_device(20)):
                 )
                 experiment.save()
                 id_param[experiment.experiment_id] = {
-                    'filters': n_filters,
-                    'kernel_size': k_size,
+                    'l1_filters': n_filters1,
+                    'l2_filters': n_filters2,
+                    'kernel_size': (3, 3),
                     'dense_size': d_size,
                 }
-with open("architecture_search.json", "w") as fp:
+search_path = get_git_root + "experiments/searches/"
+with open(search_path + search_name + ".json", "w") as fp:
     json.dump(id_param, fp, indent=2)
