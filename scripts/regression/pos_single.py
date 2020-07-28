@@ -58,8 +58,8 @@ with tf.device(get_tf_device(20)):
     )
     experiment.run(
         normalize_image_data(images[train_idx]),
-        normalize_position_data(positions[train_idx]),
-        normalize_image_data(images[val_idx])[:, :2],
+        normalize_position_data(positions[train_idx])[:, :2],
+        normalize_image_data(images[val_idx]),
         normalize_position_data(positions[val_idx])[:, :2],
     )
     experiment.save()
