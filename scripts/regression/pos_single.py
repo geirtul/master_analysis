@@ -5,7 +5,7 @@ from master_scripts.data_functions import (normalize_image_data,
                                            event_indices,
                                            get_tf_device,
                                            get_git_root)
-from master_scripts.models_prediction import position_single_cnn
+from master_scripts.models_regression import position_single_cnn
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Flatten
 from sklearn.model_selection import train_test_split
