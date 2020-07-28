@@ -57,7 +57,7 @@ with tf.device(get_tf_device(20)):
     )
     experiment.run(
         normalize_image_data(images[train_idx])[:, :2],
-        normalize_position_data(positions[train_idx, :2])[:, :2],
+        normalize_position_data(positions[train_idx])[:, :2],
         normalize_image_data(images[val_idx])[:, :2],
         normalize_position_data(positions[val_idx])[:, :2],
     )
