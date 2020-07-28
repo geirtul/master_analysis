@@ -47,6 +47,7 @@ with tf.device(get_tf_device(20)):
         optimizer='adam',
         metrics=['accuracy']
     )
+    print(model.summary())
 
     # Run experiment
     experiment = Experiment(
