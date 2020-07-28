@@ -45,7 +45,6 @@ with tf.device(get_tf_device(20)):
     model.compile(
         loss='mse',
         optimizer='adam',
-        metrics=['accuracy']
     )
     print(model.summary())
 
