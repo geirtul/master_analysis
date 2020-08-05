@@ -66,5 +66,5 @@ with tf.device(get_tf_device(20)):
         labels[val_idx],
     )
     experiment.save()
-    mpath = experiment.config['path_args']['models'] + experiment.id
+    mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
     model.save(mpath)

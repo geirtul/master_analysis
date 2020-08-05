@@ -18,7 +18,7 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 20,
+        'epochs': 10,
         'batch_size': 32,
     },
     'random_seed': 120,
@@ -39,7 +39,7 @@ train_idx, val_idx, u1, u2 = train_test_split(
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
 id_param = {}
-search_name = "position_regression_single_seeded"
+search_name = "test_position_regression_single_seeded"
 with tf.device(get_tf_device(20)):
     model = position_single_cnn()
     model.compile(

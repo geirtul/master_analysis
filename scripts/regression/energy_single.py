@@ -1,91 +1,67 @@
 # Imports
-import numpy as np
+from master_scripts.classes import Experiment
+from master_scripts.data_functions import (normalize_image_data,
+                                           normalize_position_data,
+                                           event_indices,
+                                           get_tf_device,
+                                           get_git_root)
+from master_scripts.models_regression import energy_single_cnn
+from sklearn.model_selection import train_test_split
 import tensorflow as tf
-from tensorflow.keras.utils import to_categorical
-import sys
-import matplotlib.pyplot as plt
-from master_data_functions.functions import *
-from master_models.prediction import *
-from sklearn.model_selection import train_test_split, StratifiedKFold
-from tensorflow.keras import backend
+import numpy as np
+import json
+import warnings
+warnings.filterwarnings('ignore', category=FutureWarning)
 
-# PATH variables
-DATA_PATH = "../../data/simulated/"
-OUTPUT_PATH = "../../data/output/"
-MODEL_PATH = OUTPUT_PATH + "models/"
+# ================== Config =======================
+config = {
+    'fit_args': {
+        'epochs': 10,
+        'batch_size': 32,
+    },
+    'random_seed': 120,
+}
 
 # ================== Import Data ==================
-#images = np.load(DATA_PATH + "images_noscale_200k.npy")
-#positions = np.load(DATA_PATH + "positions_noscale_200k.npy")
-#images = normalize_image_data(images)
-images = np.load(DATA_PATH + "images_1M.npy")
-energies = np.load(DATA_PATH + "energies_1M.npy")
-positions = np.load(DATA_PATH + "positions_1M.npy")
-#labels = np.load(DATA_PATH + "labels_noscale_200k.npy")
-# ================== Prepare Data ==================
+DATA_PATH = get_git_root() + "data/simulated/"
+images = np.load(DATA_PATH + "images_200k.npy")
+images = images.reshape(images.shape[0], 16, 16, 1)
+positions = np.load(DATA_PATH + "positions_200k.npy")
+energies = np.load(DATA_PATH + "energies_200k.npy")
+print(positions.shape)
 
 single_indices, double_indices, close_indices = event_indices(positions)
+train_idx, val_idx, u1, u2 = train_test_split(
+    single_indices, single_indices, random_state=config['random_seed']
+)
 
-# Split indices into training and test sets
-x_idx = np.arange(images.shape[0])
-train_idx, test_idx, not_used1, not_used2 = train_test_split(
-        single_indices, 
-        single_indices, 
-        test_size = 0.2
-        ) 
-
-# Save training and test indices, and also the test set
-#np.save("train_idx.npy", train_idx)
-#np.save("test_idx.npy", test_idx)
-#np.save("test_images__double_1M.npy", images[test_idx])
-#np.save("test_positions_double_1M.npy", positions[test_idx])
-#np.save("test_energies_double_1M.npy", energies[test_idx])
-# ================== Custom Functions ==================
-# Define R2 score for metrics since it's not available by default
-def r2_keras(y_true, y_pred):
-    SS_res =  backend.sum(backend.square(y_true - y_pred)) 
-    SS_tot = backend.sum(backend.square(y_true - backend.mean(y_true))) 
-    return ( 1 - SS_res/(SS_tot + backend.epsilon()) )
-
-# ================== Model ==================
-with tf.device('/GPU:2'):
+# set tf random seed
+tf.random.set_seed(config['random_seed'])
+id_param = {}
+search_name = "test_energy_regression_single_seeded"
+with tf.device(get_tf_device(20)):
     model = energy_single_cnn()
-    # Setup callback for saving models
-    fpath = MODEL_PATH + "cnn_energy_single_" + "r2_{val_r2_keras:.2f}.hdf5"
-    cb_save = tf.keras.callbacks.ModelCheckpoint(
-            filepath=fpath, 
-            monitor='val_r2_keras', 
-            save_best_only=True,
-            mode='max'
-            )
-    cb_earlystopping = tf.keras.callbacks.EarlyStopping(
-            monitor='val_loss', 
-            patience=3,
-            )
-
-
-    # Compile model
-    ## Custom optimizer
-    #curr_adam = tf.keras.optimizers.Adam(lr=lmbda)
-    model.compile(loss='mse',
-                  optimizer='adam',
-                  metrics=[r2_keras])
+    model.compile(
+        loss='mse',
+        optimizer='adam',
+    )
     print(model.summary())
 
-    # Parameters for the model
-    batch_size = 32
-    epochs = 10
-
-    history = model.fit(
-            normalize_image_data(images[train_idx]),
-            energies[train_idx, 0],
-            batch_size=batch_size,
-            epochs=epochs,
-            validation_data=(normalize_image_data(images[test_idx]), energies[test_idx,0]),
-            callbacks=[cb_earlystopping, cb_save]
-            )
-
-    # Predict and save predictions to go with the rest of the test data.
-    #y_pred = model.predict(normalize_image_data(images[test_idx]))
-    #np.save("test_y_pred_1M.npy", y_pred)
-
+    # Run experiment
+    experiment = Experiment(
+        model=model,
+        config=config,
+        model_type="regression",
+        experiment_name=search_name
+    )
+    experiment.run(
+        normalize_image_data(images[train_idx]),
+        energies[train_idx, 0],
+        normalize_image_data(images[val_idx]),
+        energies[val_idx, 0],
+    )
+    experiment.save()
+    id_param[experiment.experiment_id] = {}
+search_path = get_git_root() + "experiments/searches/"
+with open(search_path + search_name + ".json", "w") as fp:
+    json.dump(id_param, fp, indent=2)
