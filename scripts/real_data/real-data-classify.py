@@ -18,7 +18,8 @@ config = {
 }
 
 
-events, images = import_real_data(config)  # Images not normalized
+events, images = import_real_data(
+    config["DATA_PATH"] + config["MODEL_PATH"])  # Images not normalized
 images = normalize_image_data(images)  # Normalize images
 
 descriptors = list(
