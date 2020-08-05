@@ -32,7 +32,8 @@ classifier = tf.keras.models.load_model(
 )
 
 # Classify events
-event_classification = classifier.predict(images).argmax(axis=-1)
+prediction = classifier.predict(images)
+event_classification = (prediction > 0.5).astype(int)
 for event_id in events.keys():
     if event_classification[events[event_id]['image_idx']] == 0:
         events[event_id]['event_class'] = "single"
