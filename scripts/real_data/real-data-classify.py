@@ -19,7 +19,7 @@ config = {
 
 
 events, images = import_real_data(
-    config["DATA_PATH"] + config["MODEL_PATH"])  # Images not normalized
+    config['DATA_PATH'] + config['DATA_FILENAME'])  # Images not normalized
 images = normalize_image_data(images)  # Normalize images
 
 descriptors = list(
@@ -95,11 +95,10 @@ for d in descriptors:
         desc_class['single'].count(d),
         desc_class['double'].count(d)))
 # Store the events as a json file
-out_filename = config['OUTPUT_PATH']
-+ "events_classified_"
-+ config["DATA_FILENAME"][:-4]
-+ "_"
-+ config["CLASSIFIER"]
+out_filename = config['OUTPUT_PATH'] \
++ "events_classified_" \
++ config["DATA_FILENAME"][:-4] \
++ "_" + config["CLASSIFIER"][:-3] \
 + ".json"
 
 with open(out_filename, 'w') as fp:
