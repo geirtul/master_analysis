@@ -3,7 +3,7 @@ from master_scripts.classes import Experiment
 from master_scripts.data_functions import (normalize_image_data, get_tf_device,
                                            get_git_root)
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPool2D
+from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import numpy as np
