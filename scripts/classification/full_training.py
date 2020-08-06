@@ -63,7 +63,7 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="classification",
-        experiment_name="full_training_classifier_no_regularization"
+        experiment_name="full_training_classifier_no_regu_deeper"
     )
     experiment.run(
         normalize_image_data(images[train_idx]),
