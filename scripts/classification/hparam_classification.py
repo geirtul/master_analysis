@@ -72,7 +72,7 @@ with tf.device(get_tf_device(20)):
             labels[val_idx],
         )
         experiment.save()
-        id_param[experiment.experiment_id] = {
+        id_param[experiment.id] = {
             'batch_size': b_size,
         }
 search_path = get_git_root() + "experiments/searches/"
