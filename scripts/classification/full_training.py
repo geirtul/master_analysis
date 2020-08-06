@@ -36,7 +36,7 @@ train_idx, val_idx, u1, u2 = train_test_split(
 
 # log-scale the images if desireable
 # images = np.log1p(images)
-config['scaling'] = "minmax"
+config['scaling'] = "minmax + np.log1p"
 
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
