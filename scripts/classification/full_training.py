@@ -34,9 +34,9 @@ train_idx, val_idx, u1, u2 = train_test_split(
     x_idx, x_idx, random_state=config['random_seed']
 )
 
-# log-scale the images
-images = np.log1p(images)
-config['scaling'] = "np.log1p + minmax"
+# log-scale the images if desireable
+# images = np.log1p(images)
+config['scaling'] = "minmax"
 
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
@@ -45,7 +45,9 @@ with tf.device(get_tf_device(20)):
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3),
                      activation='relu', input_shape=(16, 16, 1)))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
