@@ -16,8 +16,8 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 10,
-        'batch_size': 32,
+        'epochs': 20,
+        'batch_size': 64,
     },
     'random_seed': 120,
 }
@@ -36,8 +36,7 @@ train_idx, val_idx, u1, u2 = train_test_split(
 
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
-id_param = {}
-search_name = "test_position_regression_double_seeded"
+search_name = "regression_pos_double_norm_seeded"
 with tf.device(get_tf_device(20)):
     model = position_double_cnn()
     model.compile(
@@ -60,7 +59,3 @@ with tf.device(get_tf_device(20)):
         normalize_position_data(positions[val_idx]),
     )
     experiment.save()
-    id_param[experiment.experiment_id] = {}
-search_path = get_git_root() + "experiments/searches/"
-with open(search_path + search_name + ".json", "w") as fp:
-    json.dump(id_param, fp, indent=2)
