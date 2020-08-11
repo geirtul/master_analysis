@@ -18,18 +18,18 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 10,
-        'batch_size': 32,
+        'epochs': 20,
+        'batch_size': 64,
     },
     'random_seed': 120,
 }
 
 # ================== Import Data ==================
 DATA_PATH = get_git_root() + "data/simulated/"
-images = np.load(DATA_PATH + "images_200k.npy")
+images = np.load(DATA_PATH + "images_full.npy")
 images = images.reshape(images.shape[0], 16, 16, 1)
-positions = np.load(DATA_PATH + "positions_200k.npy")
-labels = np.load(DATA_PATH + "labels_200k.npy")
+positions = np.load(DATA_PATH + "positions_full.npy")
+labels = np.load(DATA_PATH + "labels_full.npy")
 
 single_indices, double_indices, close_indices = event_indices(positions)
 train_idx, val_idx, u1, u2 = train_test_split(
@@ -38,8 +38,7 @@ train_idx, val_idx, u1, u2 = train_test_split(
 
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
-id_param = {}
-search_name = "test_position_regression_single_seeded"
+search_name = "regression_pos_single_norm_seeded"
 with tf.device(get_tf_device(20)):
     model = position_single_cnn()
     model.compile(
@@ -62,7 +61,3 @@ with tf.device(get_tf_device(20)):
         normalize_position_data(positions[val_idx])[:, :2],
     )
     experiment.save()
-    id_param[experiment.experiment_id] = {}
-search_path = get_git_root() + "experiments/searches/"
-with open(search_path + search_name + ".json", "w") as fp:
-    json.dump(id_param, fp, indent=2)
