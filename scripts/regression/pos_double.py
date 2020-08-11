@@ -24,10 +24,10 @@ config = {
 
 # ================== Import Data ==================
 DATA_PATH = get_git_root() + "data/simulated/"
-images = np.load(DATA_PATH + "images_200k.npy")
+images = np.load(DATA_PATH + "images_full.npy")
 images = images.reshape(images.shape[0], 16, 16, 1)
-positions = np.load(DATA_PATH + "positions_200k.npy")
-labels = np.load(DATA_PATH + "labels_200k.npy")
+positions = np.load(DATA_PATH + "positions_full.npy")
+labels = np.load(DATA_PATH + "labels_full.npy")
 
 single_indices, double_indices, close_indices = event_indices(positions)
 train_idx, val_idx, u1, u2 = train_test_split(
