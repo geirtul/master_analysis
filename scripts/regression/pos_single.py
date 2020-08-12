@@ -22,20 +22,21 @@ config = {
         'batch_size': 64,
     },
     'random_seed': 120,
+    'data': "full",
 }
 
 # ================== Import Data ==================
 DATA_PATH = get_git_root() + "data/simulated/"
-images = np.load(DATA_PATH + "images_full.npy")
+images = np.load(DATA_PATH + f"images_{config['data']}.npy")
 images = images.reshape(images.shape[0], 16, 16, 1)
-positions = np.load(DATA_PATH + "positions_full.npy")
-labels = np.load(DATA_PATH + "labels_full.npy")
+positions = np.load(DATA_PATH + f"positions_{config['data']}.npy")
+labels = np.load(DATA_PATH + f"labels_{config['data']}.npy")
 
 single_indices, double_indices, close_indices = event_indices(positions)
 train_idx, val_idx, u1, u2 = train_test_split(
     single_indices, single_indices, random_state=config['random_seed']
 )
-
+print("Loaded data")
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
 search_name = "regression_pos_single_norm_seeded"
