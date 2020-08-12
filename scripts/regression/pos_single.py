@@ -61,3 +61,5 @@ with tf.device(get_tf_device(20)):
         normalize_position_data(positions[val_idx])[:, :2],
     )
     experiment.save()
+    mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
+    model.save(mpath)
