@@ -13,11 +13,14 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 20,
+        'epochs': 10,
         'batch_size': 64,
     },
     'random_seed': 120,
-    'data': "full",
+    'data': {
+        'images': "images_full_pixelmod.npy",
+        'labels': "labels_full.npy",
+    },
 }
 
 
@@ -26,10 +29,9 @@ config = {
 
 # ================== Import Data ==================
 DATA_PATH = get_git_root() + "data/simulated/"
-images = np.load(DATA_PATH + f"images_{config['data']}.npy")
+images = np.load(DATA_PATH + config['data']['images'])
 images = images.reshape(images.shape[0], 16, 16, 1)
-positions = np.load(DATA_PATH + f"positions_{config['data']}.npy")
-labels = np.load(DATA_PATH + f"labels_{config['data']}.npy")
+labels = np.load(DATA_PATH + config['data']['labels'])
 
 x_idx = np.arange(images.shape[0])
 train_idx, val_idx, u1, u2 = train_test_split(
@@ -37,7 +39,7 @@ train_idx, val_idx, u1, u2 = train_test_split(
 )
 
 # log-scale the images if desireable
-config['scaling'] = "minmax + np.log1p"
+config['scaling'] = "minmax"
 if "np.log" in config['scaling']:
     images = np.log1p(images)
 

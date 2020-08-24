@@ -13,8 +13,8 @@ config = {
     'DATA_PATH': "../../data/real/",
     'DATA_FILENAME': "anodedata_500k.txt",
     'MODEL_PATH': "../../models/",
-    'OUTPUT_PATH': "../../data/output/",
-    'CLASSIFIER': "4557cfeefc83.h5",
+    'RESULTS_PATH': "../../results/",
+    'CLASSIFIER': "9886d077068a.h5",
 }
 
 
@@ -96,11 +96,11 @@ for d in descriptors:
         desc_class['single'].count(d),
         desc_class['double'].count(d)))
 # Store the events as a json file
-out_filename = config['OUTPUT_PATH'] \
-+ "events_classified_" \
-+ config["DATA_FILENAME"][:-4] \
-+ "_" + config["CLASSIFIER"][:-3] \
-+ ".json"
+out_filename = config['RESULTS_PATH'] \
+    + "events_classified_" \
+    + config["DATA_FILENAME"][:-4] \
+    + "_" + config["CLASSIFIER"][:-3] \
+    + ".json"
 
 with open(out_filename, 'w') as fp:
     json.dump(events, fp, sort_keys=True, indent=4)
