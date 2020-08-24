@@ -20,25 +20,30 @@ config = {
         'batch_size': 32,
     },
     'random_seed': 120,
+    'data': "full_pixelmod",
 }
 
 # ================== Import Data ==================
 DATA_PATH = get_git_root() + "data/simulated/"
-images = np.load(DATA_PATH + "images_200k.npy")
+images = np.load(DATA_PATH + f"images_{config['data']}.npy")
 images = images.reshape(images.shape[0], 16, 16, 1)
-positions = np.load(DATA_PATH + "positions_200k.npy")
-energies = np.load(DATA_PATH + "energies_200k.npy")
-print(positions.shape)
+positions = np.load(DATA_PATH + f"positions_full.npy")
+energies = np.load(DATA_PATH + f"energies_full.npy")
+labels = np.load(DATA_PATH + f"labels_full.npy")
 
 single_indices, double_indices, close_indices = event_indices(positions)
 train_idx, val_idx, u1, u2 = train_test_split(
     single_indices, single_indices, random_state=config['random_seed']
 )
 
+print("Loaded data")
+# log-scale the images if desireable
+config['scaling'] = "minmax"
+if "np.log" in config['scaling']:
+    images = np.log1p(images)
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
-id_param = {}
-search_name = "test_energy_regression_single_seeded"
+search_name = "energy_regression_single_seeded"
 with tf.device(get_tf_device(20)):
     model = energy_single_cnn()
     model.compile(
@@ -61,7 +66,3 @@ with tf.device(get_tf_device(20)):
         energies[val_idx, 0],
     )
     experiment.save()
-    id_param[experiment.experiment_id] = {}
-search_path = get_git_root() + "experiments/searches/"
-with open(search_path + search_name + ".json", "w") as fp:
-    json.dump(id_param, fp, indent=2)
