@@ -46,8 +46,8 @@ with tf.device(get_tf_device(20)):
     model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
-    model.add(Dense(1, activation='linear'))
+    model.add(Dense(256, activation='relu'))
+    model.add(Dense(2, activation='linear'))
     model.compile(
         loss='mse',
         optimizer='adam',
