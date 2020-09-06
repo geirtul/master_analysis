@@ -26,7 +26,7 @@ config = {
 DATA_PATH = get_git_root() + "data/simulated/"
 images = np.load(DATA_PATH + f"images_{config['data']}.npy")
 images = images.reshape(images.shape[0], 16, 16, 1)
-positions = np.load(DATA_PATH | + "positions_full.npy")
+positions = np.load(DATA_PATH + "positions_full.npy")
 labels = np.load(DATA_PATH + "labels_full.npy")
 
 single_indices, double_indices, close_indices = event_indices(positions)
