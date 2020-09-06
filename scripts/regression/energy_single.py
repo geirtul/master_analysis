@@ -68,3 +68,5 @@ with tf.device(get_tf_device(20)):
         energies[single_indices, 0],
     )
     experiment.save()
+    mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
+    model.save(mpath)
