@@ -91,7 +91,7 @@ model = tf.keras.models.load_model(
 for k in events.keys():
     if events[k]['event_class'] == 'single':
         events[k]['predicted_energy'] = model.predict(
-            images[events[k]['image_idx']])
+            images[events[k]['image_idx']].reshape(1, 16, 16, 1)).tolist()
 
 # ============================================================================
 # SINGLE EVENTS - position prediction
@@ -105,7 +105,7 @@ model = tf.keras.models.load_model(
 for k in events.keys():
     if events[k]['event_class'] == 'single':
         events[k]['predicted_position'] = model.predict(
-            images[events[k]['image_idx']])
+            images[events[k]['image_idx']].reshape(1, 16, 16, 1)).tolist()
 
 # Store the events as a json file
 out_filename = config['RESULTS_PATH'] \
