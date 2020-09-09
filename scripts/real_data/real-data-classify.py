@@ -1,6 +1,7 @@
 from master_scripts.data_functions import (import_real_data,
                                            normalize_image_data)
 import json
+import numpy as np
 import tensorflow as tf
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -82,17 +83,25 @@ for d in descriptors:
 # ============================================================================
 # SINGLE EVENTS - energy prediction
 # ============================================================================
+# Get single indices
+single_indices = []
+single_keys = []
+for k in events.keys():
+    if events[k]['event_class'] == 'single':
+        single_indices.append(events[k]['image_idx'])
+        single_keys.append(k)
+single_indices = np.array(single_indices)
+
 # Load model
 model = tf.keras.models.load_model(
     config['MODEL_PATH'] + config['ENERGY_MODEL']
 )
 
 # Predict on single events
-for k in events.keys():
-    if events[k]['event_class'] == 'single':
-        events[k]['predicted_energy'] = model.predict(
-            images[events[k]['image_idx']].reshape(1, 16, 16, 1)).tolist()
-
+print("Predicting energies...")
+prediction = model.predict(images[single_indices])
+for i, k in enumerate(single_keys):
+    events[k]['predicted_energy'] = prediction[i].tolist()
 # ============================================================================
 # SINGLE EVENTS - position prediction
 # ============================================================================
@@ -101,12 +110,10 @@ model = tf.keras.models.load_model(
     config['MODEL_PATH'] + config['POSITIONS_MODEL']
 )
 
-# Predict on single events
-for k in events.keys():
-    if events[k]['event_class'] == 'single':
-        events[k]['predicted_position'] = model.predict(
-            images[events[k]['image_idx']].reshape(1, 16, 16, 1)).tolist()
-
+print("Predicting positions...")
+prediction = model.predict(images[single_indices])
+for i, k in enumerate(single_keys):
+    events[k]['predicted_position'] = prediction[i].tolist()
 # Store the events as a json file
 out_filename = config['RESULTS_PATH'] \
     + "events_classified_" \
