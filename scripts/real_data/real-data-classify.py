@@ -1,9 +1,7 @@
 from master_scripts.data_functions import (import_real_data,
                                            normalize_image_data)
-import matplotlib.pyplot as plt
 import json
 import tensorflow as tf
-import numpy as np
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
 
@@ -14,7 +12,9 @@ config = {
     'DATA_FILENAME': "anodedata_500k.txt",
     'MODEL_PATH': "../../models/",
     'RESULTS_PATH': "../../results/",
-    'CLASSIFIER': "9886d077068a.h5",
+    'CLASSIFIER': "367e35da671b.h5",
+    'ENERGY_MODEL': "2137bd6d101c.h5",
+    'POSITIONS_MODEL': "337cafc233f7.h5",
 }
 
 
@@ -27,12 +27,12 @@ descriptors = list(
 )
 
 # Load models
-classifier = tf.keras.models.load_model(
+model = tf.keras.models.load_model(
     config['MODEL_PATH'] + config['CLASSIFIER']
 )
 
 # Classify events
-prediction = classifier.predict(images)
+prediction = model.predict(images)
 event_classification = (prediction > 0.5).astype(int)
 for event_id in events.keys():
     if event_classification[events[event_id]['image_idx']] == 0:
@@ -47,23 +47,6 @@ desc_class = {
 }
 for event in events.values():
     desc_class[event['event_class']].append(event['event_descriptor'])
-
-bin_min = np.amin(np.array(descriptors))
-bin_max = np.amax(np.array(descriptors))
-
-fig, ax = plt.subplots()
-ax.hist(
-    [desc_class['single'], desc_class['double']],
-    histtype='barstacked',
-    label=["single", "double"],
-    bins=np.arange(bin_min, bin_max + 2),
-    align='left'
-)
-ax.set_xticks(np.arange(bin_max + 2))
-ax.set_xlabel("Event descriptor")
-ax.set_ylabel("Number of events")
-ax.legend()
-fig.savefig("num_events_per_descriptor.pdf")
 
 translate_descriptor = {
     1: "Implant",
@@ -95,11 +78,42 @@ for d in descriptors:
         translate_descriptor[d],
         desc_class['single'].count(d),
         desc_class['double'].count(d)))
+
+# ============================================================================
+# SINGLE EVENTS - energy prediction
+# ============================================================================
+# Load model
+model = tf.keras.models.load_model(
+    config['MODEL_PATH'] + config['ENERGY_MODEL']
+)
+
+# Predict on single events
+for k in events.keys():
+    if events[k]['event_class'] == 'single':
+        events[k]['predicted_energy'] = model.predict(
+            images[events[k]['image_idx']])
+
+# ============================================================================
+# SINGLE EVENTS - position prediction
+# ============================================================================
+# Load model
+model = tf.keras.models.load_model(
+    config['MODEL_PATH'] + config['POSITIONS_MODEL']
+)
+
+# Predict on single events
+for k in events.keys():
+    if events[k]['event_class'] == 'single':
+        events[k]['predicted_position'] = model.predict(
+            images[events[k]['image_idx']])
+
 # Store the events as a json file
 out_filename = config['RESULTS_PATH'] \
     + "events_classified_" \
     + config["DATA_FILENAME"][:-4] \
-    + "_" + config["CLASSIFIER"][:-3] \
+    + "_C_" + config["CLASSIFIER"][:-3] \
+    + "_E_" + config["ENERGY_MODEL"][:-3] \
+    + "_P_" + config["POSITIONS_MODEL"][:-3] \
     + ".json"
 
 with open(out_filename, 'w') as fp:
