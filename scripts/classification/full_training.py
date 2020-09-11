@@ -3,7 +3,8 @@ from master_scripts.classes import Experiment
 from master_scripts.data_functions import (normalize_image_data, get_tf_device,
                                            get_git_root)
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
+from tensorflow.keras.layers import (Conv2D, Dense, Flatten, MaxPooling2D,
+                                     Dropout)
 import tensorflow as tf
 import numpy as np
 import warnings
@@ -41,20 +42,38 @@ if "np.log" in config['scaling']:
 tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
     # Build model
-    padding = 'same'
+    #padding = 'same'
+    #model = Sequential()
+    # model.add(Conv2D(32, kernel_size=(3, 3),
+    #                 activation='relu', input_shape=(16, 16, 1),
+    #                 padding=padding))
+    #model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
+    #model.add(MaxPooling2D(pool_size=(2, 2)))
+    #model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
+    #model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
+    # model.add(Flatten())
+    #model.add(Dense(128, activation='relu'))
+    #model.add(Dense(1, activation='sigmoid'))
+    # model.compile(
+    #    optimizer='adam',
+    #    loss='binary_crossentropy',
+    #    metrics=['accuracy']
+    # )
+
+    # Project model
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3),
-                     activation='relu', input_shape=(16, 16, 1), padding=padding))
-    model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
+                     activation='relu', input_shape=(16, 16, 1)))
+    model.add(Conv2D(64, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
-    model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
-    model.add(Flatten())
+    model.add(Dropout(0.25))
     model.add(Dense(128, activation='relu'))
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dropout(0.5))
+    model.add(Flatten())
+    model.add(Dense(2, activation='softmax'))
     model.compile(
-        optimizer='adam',
-        loss='binary_crossentropy',
+        loss='categorical_crossentropy',
+        optimizer='adadelta',
         metrics=['accuracy']
     )
 
@@ -63,11 +82,11 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="classification",
-        experiment_name="full_training_classifier_no_regu_deeper"
+        experiment_name="full_training_classifier_project_model"
     )
     experiment.run(
         normalize_image_data(images),
-        labels,
+        tf.one_hot(labels),
     )
     experiment.save()
     mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
