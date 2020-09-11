@@ -86,7 +86,7 @@ with tf.device(get_tf_device(20)):
     )
     experiment.run(
         normalize_image_data(images),
-        tf.one_hot(labels, depth=2),
+        np.eye(2)[labels],
     )
     experiment.save()
     mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
