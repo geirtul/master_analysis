@@ -38,7 +38,8 @@ automl = autosklearn.regression.AutoSklearnRegressor(
     per_run_time_limit=15,
     tmp_folder='tmp',
     output_folder='output',
-    ensemble_memory_limit=8192,
+    ensemble_memory_limit=16384,
+    ml_memory_limit=8192,
 )
 automl.fit(images[train_idx], positions[train_idx],
            dataset_name='testset-automl')
