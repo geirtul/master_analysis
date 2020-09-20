@@ -21,6 +21,8 @@ config = {
 
 events, images = import_real_data(
     config['DATA_PATH'] + config['DATA_FILENAME'])  # Images not normalized
+images = np.load(config['DATA_PATH'] + "anodedata_500k_gaussian_smooth.npy")
+images = images.reshape(images.shape[0], 16, 16, 1)
 images = normalize_image_data(images)  # Normalize images
 
 descriptors = list(
@@ -121,7 +123,7 @@ out_filename = config['RESULTS_PATH'] \
     + "_C_" + config["CLASSIFIER"][:-3] \
     + "_E_" + config["ENERGY_MODEL"][:-3] \
     + "_P_" + config["POSITIONS_MODEL"][:-3] \
-    + ".json"
+    + "_gaussian.json"
 
 with open(out_filename, 'w') as fp:
     json.dump(events, fp, sort_keys=True, indent=4)
