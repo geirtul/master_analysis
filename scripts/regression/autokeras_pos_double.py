@@ -33,20 +33,21 @@ labels = np.load(DATA_PATH + "labels_200k.npy")
 
 single_indices, double_indices, close_indices = event_indices(positions)
 train_idx, val_idx, non1, non2 = train_test_split(
-    single_indices, single_indices, random_state=config['random_seed'])
+    double_indices, double_indices, random_state=config['random_seed'])
 # log-scale the images if desireable
 config['scaling'] = "minmax"
 # set tf random seed
 with tf.device(get_tf_device(20)):
 	reg = ak.ImageRegressor(
 	    overwrite=True,
-	    max_trials=3) # It tries 10 different models.
+	    max_trials=100,
+	)
 	# Feed the structured data regressor with training data.
 	reg.fit(
-	    images[train_idx],
-	    positions[train_idx, :2],
-	    validation_data=(images[val_idx], positions[val_idx, :2])
+	    normalize_image_data(images[train_idx]),
+	    normalize_position_data(positions[train_idx]),
+	    validation_data=(normalize_image_data(images[val_idx]), normalize_position_data(positions[val_idx])),
 	    epochs=10,
 	)
-	predicted_y = reg.predict(images[val_idx])
-	print(reg.evaluate(images[val_idx], positions[val_idx, :2 ]))
+	predicted_y = reg.predict(normalize_image_data(images[val_idx]))
+	print(reg.evaluate(normalize_image_data(images[val_idx]), normalize_position_data(positions[val_idx])))

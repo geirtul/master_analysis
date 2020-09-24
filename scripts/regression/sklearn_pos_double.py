@@ -30,7 +30,10 @@ labels = np.load(DATA_PATH + "labels_200k.npy")
 single_indices, double_indices, close_indices = event_indices(positions)
 
 train_idx, test_idx, non1, non2 = train_test_split(
-    double_indices, double_indices, random_state=config['random_seed'])
+    single_indices, single_indices, random_state=config['random_seed'])
+
+# Convert positions to single-digit
+positions = positions[:, 0]*16 + positions[:, 1]
 
 
 automl = autosklearn.regression.AutoSklearnRegressor(
@@ -38,11 +41,11 @@ automl = autosklearn.regression.AutoSklearnRegressor(
     per_run_time_limit=15,
     tmp_folder='tmp',
     output_folder='output',
-    ensemble_memory_limit=16384,
-    ml_memory_limit=8192,
+    ensemble_memory_limit=32768,
+    ml_memory_limit=16384,
 )
 automl.fit(images[train_idx], positions[train_idx],
-           dataset_name='testset-automl')
+           dataset_name='testset-automl-singles')
 
 print(automl.show_models())
 predictions = automl.predict(images[test_idx])
