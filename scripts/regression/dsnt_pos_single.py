@@ -42,8 +42,9 @@ with tf.device(get_tf_device(20)):
     inputs = tf.keras.Input(shape=(16, 16, 1))
     inputs = Conv2D(32, kernel_size=(3, 3), activation='relu',
                     padding=padding)(inputs)
-    inputs = Conv2D(64, (3, 3), activation='relu', padding=padding)(inputs)
-    outputs = DSNT()(inputs)
+    #inputs = Conv2D(64, (3, 3), activation='relu', padding=padding)(inputs)
+    outputs = Conv2D(64, (3, 3), activation='relu', padding=padding)(inputs)
+    #outputs = DSNT()(inputs)
     model = tf.keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
         dsnt_mse,
