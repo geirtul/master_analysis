@@ -46,8 +46,8 @@ with tf.device(get_tf_device(20)):
     outputs = DSNT()(x)
     model = tf.keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
-        dsnt_mse,
         optimizer='adam',
+        loss=dsnt_mse,
     )
     print(model.summary())
 
