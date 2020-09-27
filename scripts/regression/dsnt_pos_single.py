@@ -39,9 +39,9 @@ tf.random.set_seed(config['random_seed'])
 search_name = "regression_pos_single_norm_seeded_dsnt"
 with tf.device(get_tf_device(20)):
     padding = 'same'
-    inputs = Conv2D(32, kernel_size=(3, 3),
-                    activation='relu', input_shape=(16, 16, 1),
-                    padding=padding)
+    inputs = tf.keras.Input(shape=(16, 16, 1))
+    inputs = Conv2D(32, kernel_size=(3, 3), activation='relu',
+                    padding=padding)(inputs)
     inputs = Conv2D(64, (3, 3), activation='relu', padding=padding)(inputs)
     normed_heatmaps, coords = DSNT()(inputs)
     model = tf.keras.Model(inputs=inputs, outputs=coords)
