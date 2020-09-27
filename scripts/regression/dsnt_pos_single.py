@@ -6,7 +6,6 @@ from master_scripts.data_functions import (normalize_image_data,
                                            get_tf_device,
                                            get_git_root)
 from master_scripts.analysis_functions import dsnt_mse
-from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 import tensorflow as tf
 import numpy as np
@@ -40,19 +39,12 @@ tf.random.set_seed(config['random_seed'])
 search_name = "regression_pos_single_norm_seeded_dsnt"
 with tf.device(get_tf_device(20)):
     padding = 'same'
-    model = Sequential()
-    model.add(Conv2D(32, kernel_size=(3, 3),
-                     activation='relu', input_shape=(16, 16, 1),
-                     padding=padding))
-    model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
-    model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
-    model.add(DSNT())
-    model.compile(
-        loss=dsnt_mse,
-        optimizer='adam',
-    )
+    inputs = Conv2D(32, kernel_size=(3, 3),
+                    activation='relu', input_shape=(16, 16, 1),
+                    padding=padding)
+    inputs = Conv2D(64, (3, 3), activation='relu', padding=padding)(inputs)
+    normed_heatmaps, coords = DSNT()(inputs)
+    model = tf.keras.Model(inputs=inputs, outputs=coords)
     print(model.summary())
 
     # Run experiment
