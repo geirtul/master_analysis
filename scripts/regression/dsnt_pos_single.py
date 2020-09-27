@@ -5,6 +5,7 @@ from master_scripts.data_functions import (normalize_image_data,
                                            event_indices,
                                            get_tf_device,
                                            get_git_root)
+from master_scripts.analysis_functions import dsnt_mse
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
 import tensorflow as tf
@@ -49,7 +50,7 @@ with tf.device(get_tf_device(20)):
     model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
     model.add(DSNT())
     model.compile(
-        loss='mse',
+        loss=dsnt_mse,
         optimizer='adam',
     )
     print(model.summary())
