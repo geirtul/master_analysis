@@ -45,6 +45,10 @@ with tf.device(get_tf_device(20)):
     inputs = Conv2D(64, (3, 3), activation='relu', padding=padding)(inputs)
     normed_heatmaps, coords = DSNT()(inputs)
     model = tf.keras.Model(inputs=inputs, outputs=coords)
+    model.compile(
+        dsnt_mse,
+        optimizer='adam',
+    )
     print(model.summary())
 
     # Run experiment
