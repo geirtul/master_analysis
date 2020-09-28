@@ -5,7 +5,6 @@ from master_scripts.data_functions import (normalize_image_data,
                                            event_indices,
                                            get_tf_device,
                                            get_git_root)
-from master_scripts.analysis_functions import dsnt_mse
 from tensorflow.keras.layers import Conv2D
 import tensorflow as tf
 import numpy as np
@@ -26,8 +25,8 @@ config = {
 DATA_PATH = get_git_root() + "data/simulated/"
 images = np.load(DATA_PATH + f"images_{config['data']}.npy")
 images = images.reshape(images.shape[0], 16, 16, 1)
-positions = np.load(DATA_PATH + "positions_full_pixelmod.npy")
-labels = np.load(DATA_PATH + "labels_full_pixelmod.npy")
+positions = np.load(DATA_PATH + "positions_full.npy")
+labels = np.load(DATA_PATH + "labels_full.npy")
 
 single_indices, double_indices, close_indices = event_indices(positions)
 # log-scale the images if desireable
