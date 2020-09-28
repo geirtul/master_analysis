@@ -6,7 +6,7 @@ from master_scripts.data_functions import (normalize_image_data,
                                            get_tf_device,
                                            get_git_root)
 from master_scripts.analysis_functions import dsnt_mse
-from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
+from tensorflow.keras.layers import Conv2D
 import tensorflow as tf
 import numpy as np
 import warnings
@@ -43,8 +43,8 @@ with tf.device(get_tf_device(20)):
     x = Conv2D(32, kernel_size=(3, 3), activation='relu',
                padding=padding)(inputs)
     x = Conv2D(64, (3, 3), activation='relu', padding=padding)(inputs)
-    outputs = DSNT()(x)
-    model = tf.keras.Model(inputs=inputs, outputs=outputs)
+    normed_heatmap, coords = DSNT()(x)
+    model = tf.keras.Model(inputs=inputs, outputs=coords)
     model.compile(
         optimizer='adam',
         loss=dsnt_mse,
