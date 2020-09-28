@@ -15,19 +15,19 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 20,
+        'epochs': 10,
         'batch_size': 64,
     },
     'random_seed': 120,
-    'data': "200k",
+    'data': "full_pixelmod",
 }
 
 # ================== Import Data ==================
 DATA_PATH = get_git_root() + "data/simulated/"
 images = np.load(DATA_PATH + f"images_{config['data']}.npy")
 images = images.reshape(images.shape[0], 16, 16, 1)
-positions = np.load(DATA_PATH + "positions_200k.npy")
-labels = np.load(DATA_PATH + "labels_200k.npy")
+positions = np.load(DATA_PATH + "positions_full_pixelmod.npy")
+labels = np.load(DATA_PATH + "labels_full_pixelmod.npy")
 
 single_indices, double_indices, close_indices = event_indices(positions)
 # log-scale the images if desireable
@@ -42,13 +42,16 @@ with tf.device(get_tf_device(20)):
     inputs = tf.keras.Input(shape=(16, 16, 1))
     x = Conv2D(32, kernel_size=(3, 3), activation='relu',
                padding=padding)(inputs)
+    x = Conv2D(64, kernel_size=(3, 3), activation='relu',
+               padding=padding)(inputs)
     x = Conv2D(1, kernel_size=(3, 3), activation='relu',
                padding=padding)(x)
-    normed_heatmap, coords = DSNT()(x)
-    model = tf.keras.Model(inputs=inputs, outputs=coords)
+    outputs = DSNT()(x)
+    model = tf.keras.Model(inputs=inputs, outputs=outputs[1])
+    prediction_model = tf.keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
         optimizer='adam',
-        loss=dsnt_mse,
+        loss='mse',
     )
     print(model.summary())
 
@@ -65,4 +68,4 @@ with tf.device(get_tf_device(20)):
     )
     experiment.save()
     mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
-    model.save(mpath)
+    prediction_model.save(mpath)
