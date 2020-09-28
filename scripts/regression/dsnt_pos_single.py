@@ -43,7 +43,7 @@ with tf.device(get_tf_device(20)):
     x = Conv2D(32, kernel_size=(3, 3), activation='relu',
                padding=padding)(inputs)
     x = Conv2D(1, kernel_size=(3, 3), activation='relu',
-               padding=padding)(inputs)
+               padding=padding)(x)
     normed_heatmap, coords = DSNT()(x)
     model = tf.keras.Model(inputs=inputs, outputs=coords)
     model.compile(
