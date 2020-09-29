@@ -52,6 +52,10 @@ with tf.device(get_tf_device(20)):
         optimizer='adam',
         loss='mse',
     )
+    prediction_model.compile(
+        optimizer='adam',
+        loss='mse',
+    )
     print(model.summary())
 
     # Run experiment
