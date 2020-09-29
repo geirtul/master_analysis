@@ -42,7 +42,7 @@ with tf.device(get_tf_device(20)):
     x = Conv2D(32, kernel_size=(3, 3), activation='relu',
                padding=padding)(inputs)
     x = Conv2D(64, kernel_size=(3, 3), activation='relu',
-               padding=padding)(inputs)
+               padding=padding)(x)
     x = Conv2D(1, kernel_size=(3, 3), activation='relu',
                padding=padding)(x)
     outputs = DSNT()(x)
