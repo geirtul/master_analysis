@@ -77,3 +77,6 @@ with tf.device(get_tf_device(20)):
     )
     np.save("dsnt_heatmaps_pred.npy", heatmaps)
     np.save("dsnt_coords_pred.npy", coords)
+    print("Finished experiment.")
+    print("Name:", search_name)
+    print("id:", experiment.id)
