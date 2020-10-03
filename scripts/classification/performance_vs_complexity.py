@@ -20,8 +20,8 @@ config = {
     },
     'random_seed': 120,
     'data': {
-        'images_sim': "images_200k.npy",
-        'labels_sim': "labels_200k.npy",
+        'images_sim': "images_full_pixelmod.npy",
+        'labels_sim': "labels_full.npy",
     },
 }
 
