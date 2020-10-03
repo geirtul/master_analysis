@@ -140,12 +140,12 @@ with tf.device(get_tf_device(20)):
         )
         if "logistic" in k or "dense" in k:
             experiment.run(
-            normalize_image_data(images).reshape(images.shape[0], 256),
+            images.reshape(images.shape[0], 256),
             labels,
         )
         else:
             experiment.run(
-                normalize_image_data(images),
+                images,
                 labels,
             )
         experiment.save()
