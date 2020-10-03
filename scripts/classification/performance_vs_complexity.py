@@ -8,6 +8,7 @@ from tensorflow.keras.layers import (Conv2D, Dense, Flatten, MaxPooling2D,
                                      Dropout)
 import tensorflow as tf
 import numpy as np
+import json
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
 
@@ -141,7 +142,24 @@ with tf.device(get_tf_device(20)):
 
         # Predict on experimental data and output results
         if "logistic" in k or "dense" in k:
-            experiment.model.predict(images_real)
+            pred = experiment.model.predict(
+                images_real.reshape(images_real.shape[0], 256)
+            )
+        else:
+            pred = experiment.model.predict(
+                images_real.reshape(images_real)
+            )
+        classification = (pred > 0.5).astype(int)
+        tmp = anodedata_classification(events, classification)
+        # Store the events as a json file
+        out_filename = config['RESULTS_PATH'] \
+            + "events_classified_" \
+            + config_real["DATA_FILENAME"][:-4] \
+            + "_C_" + k \
+            + ".json"
+
+        with open(out_filename, 'w') as fp:
+            json.dump(tmp, fp, sort_keys=True, indent=4)
 
 print("Performed experiments:")
 for k, v in experiments.items():
