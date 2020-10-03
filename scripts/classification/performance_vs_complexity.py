@@ -15,7 +15,7 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 20,
+        'epochs': 10,
         'batch_size': 64,
     },
     'random_seed': 120,
@@ -95,7 +95,9 @@ with tf.device(get_tf_device(20)):
     models['dense_100_5'] = model
 
     # Small convolutional network
-    model.add(Conv2D(10, activation='relu'))
+    model.add(Conv2D(10, kernel_size=3, activation='relu'))
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
@@ -105,11 +107,13 @@ with tf.device(get_tf_device(20)):
     models['cnn_shallow'] = model
     
     # Large convolutional network, deeper and wider
-    model.add(Conv2D(32, activation='relu'))
-    model.add(Conv2D(32, activation='relu'))
-    model.add(Conv2D(64, activation='relu'))
-    model.add(Conv2D(64, activation='relu'))
-    model.add(Conv2D(128, activation='relu'))
+    model.add(Conv2D(32, kernel_size=3, activation='relu'))
+    model.add(Conv2D(32, kernel_size=3, activation='relu'))
+    model.add(Conv2D(64, kernel_size=3, activation='relu'))
+    model.add(Conv2D(64, kernel_size=3, activation='relu'))
+    model.add(Conv2D(128, kernel_size=3, activation='relu'))
+    model.add(Flatten())
+    model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
