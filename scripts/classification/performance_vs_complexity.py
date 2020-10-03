@@ -72,7 +72,7 @@ with tf.device(get_tf_device(20)):
 
     # Small Dense network
     model = Sequential()
-    model.add(Dense(10, activation='relu', input_shape=(256,)))
+    model.add(Dense(10, activation='relu'), input_shape=(256,))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
@@ -82,7 +82,7 @@ with tf.device(get_tf_device(20)):
 
     # Large dense network
     model = Sequential()
-    model.add(Dense(100, activation='relu'))
+    model.add(Dense(100, activation='relu'), input_shape=(256,))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
