@@ -136,7 +136,6 @@ with tf.device(get_tf_device(20)):
 
     # Run experiments
     for k, m in models.items():
-        print("Running model:", k)
         experiment = Experiment(
             model=m,
             config=config,
@@ -153,6 +152,7 @@ with tf.device(get_tf_device(20)):
                 images,
                 labels,
             )
+        print("Outputting model:", k)
         experiment.save()
         mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
         model.save(mpath)
