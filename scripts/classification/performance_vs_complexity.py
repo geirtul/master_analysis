@@ -119,5 +119,6 @@ with tf.device(get_tf_device(20)):
         mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
         model.save(mpath)
         experiments[k] = experiment.id
+print("Performed experiments:")
 for k, v in experiments.items():
     print(k, ":", v)
