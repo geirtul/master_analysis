@@ -122,9 +122,10 @@ with tf.device(get_tf_device(20)):
         padding='same')
     )
     model.add(Conv2D(32, kernel_size=3, activation='relu', padding='same'))
-    model.add(Conv2D(64, kernel_size=3, activation='relu', padding='same'))
-    model.add(Conv2D(64, kernel_size=3, activation='relu', padding='same'))
-    model.add(Conv2D(128, kernel_size=3, activation='relu', padding='same'))
+    model.add(Conv2D(32, kernel_size=3, activation='relu', padding='same'))
+    model.add(Conv2D(32, kernel_size=3, activation='relu', padding='same'))
+    model.add(Conv2D(32, kernel_size=3, activation='relu', padding='same'))
+    model.add(Conv2D(32, kernel_size=3, activation='relu', padding='same'))
     model.add(Flatten())
     model.add(Dense(1, activation='sigmoid'))
     model.compile(
@@ -132,7 +133,7 @@ with tf.device(get_tf_device(20)):
         loss='binary_crossentropy',
         metrics=['accuracy']
     )
-    models['cnn_deepwide'] = model
+    models['cnn_deep'] = model
 
     # Run experiments
     for k, m in models.items():
