@@ -62,7 +62,7 @@ with tf.device(get_tf_device(20)):
     models = {}
     # Logistic
     model = Sequential()
-    model.add(Dense(1, activation='sigmoid'))
+    model.add(Dense(1, activation='sigmoid', input_shape=(256,)))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
@@ -72,7 +72,7 @@ with tf.device(get_tf_device(20)):
 
     # Small Dense network
     model = Sequential()
-    model.add(Dense(10, activation='relu'))
+    model.add(Dense(10, activation='relu', input_shape=(256,)))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
@@ -95,7 +95,9 @@ with tf.device(get_tf_device(20)):
     models['dense_100_5'] = model
 
     # Small convolutional network
-    model.add(Conv2D(10, kernel_size=3, activation='relu'))
+    model.add(
+        Conv2D(10, kernel_size=3, activation='relu', input_shape=(16, 16, 1))
+    )
     model.add(Flatten())
     model.add(Dense(1, activation='sigmoid'))
     model.compile(
@@ -107,7 +109,9 @@ with tf.device(get_tf_device(20)):
     models['cnn_shallow'] = model
     
     # Large convolutional network, deeper and wider
-    model.add(Conv2D(32, kernel_size=3, activation='relu'))
+    model.add(
+        Conv2D(32, kernel_size=3, activation='relu', input_shape=(16, 16, 1))
+    )
     model.add(Conv2D(32, kernel_size=3, activation='relu'))
     model.add(Conv2D(64, kernel_size=3, activation='relu'))
     model.add(Conv2D(64, kernel_size=3, activation='relu'))
