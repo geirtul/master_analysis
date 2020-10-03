@@ -29,9 +29,9 @@ config = {
 
 # import simulated data
 DATA_PATH = get_git_root() + "data/simulated/"
-images = np.load(DATA_PATH + config['data']['images'])
+images = np.load(DATA_PATH + config['data']['images_sim'])
 images = images.reshape(images.shape[0], 16, 16, 1)
-labels = np.load(DATA_PATH + config['data']['labels'])
+labels = np.load(DATA_PATH + config['data']['labels_sim'])
 
 # import real data
 config_real = {
