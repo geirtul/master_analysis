@@ -155,7 +155,7 @@ with tf.device(get_tf_device(20)):
         print("Outputting model:", k)
         experiment.save()
         mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
-        model.save(mpath)
+        experiment.model.save(mpath)
         experiments[k] = experiment.id
 
         # Predict on experimental data and output results
