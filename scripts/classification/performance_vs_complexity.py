@@ -72,7 +72,8 @@ with tf.device(get_tf_device(20)):
 
     # Small Dense network
     model = Sequential()
-    model.add(Dense(10, activation='relu'), input_shape=(256,))
+    model.add(InputLayer(input_shape=(images.shape[1],)))
+    model.add(Dense(10, activation='relu'))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
@@ -82,7 +83,8 @@ with tf.device(get_tf_device(20)):
 
     # Large dense network
     model = Sequential()
-    model.add(Dense(100, activation='relu'), input_shape=(256,))
+    model.add(InputLayer(input_shape=(images.shape[1],)))
+    model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
@@ -96,7 +98,8 @@ with tf.device(get_tf_device(20)):
 
     # Small convolutional network
     model.add(
-        Conv2D(10, kernel_size=3, activation='relu', input_shape=(16, 16, 1))
+        Conv2D(10, kernel_size=3, activation='relu', input_shape=(16, 16, 1),
+        padding='same')
     )
     model.add(Flatten())
     model.add(Dense(1, activation='sigmoid'))
@@ -110,12 +113,13 @@ with tf.device(get_tf_device(20)):
     
     # Large convolutional network, deeper and wider
     model.add(
-        Conv2D(32, kernel_size=3, activation='relu', input_shape=(16, 16, 1))
+        Conv2D(32, kernel_size=3, activation='relu', input_shape=(16, 16, 1),
+        padding='same')
     )
-    model.add(Conv2D(32, kernel_size=3, activation='relu'))
-    model.add(Conv2D(64, kernel_size=3, activation='relu'))
-    model.add(Conv2D(64, kernel_size=3, activation='relu'))
-    model.add(Conv2D(128, kernel_size=3, activation='relu'))
+    model.add(Conv2D(32, kernel_size=3, activation='relu', padding='same'))
+    model.add(Conv2D(64, kernel_size=3, activation='relu', padding='same'))
+    model.add(Conv2D(64, kernel_size=3, activation='relu', padding='same'))
+    model.add(Conv2D(128, kernel_size=3, activation='relu', padding='same'))
     model.add(Flatten())
     model.add(Dense(1, activation='sigmoid'))
     model.compile(
