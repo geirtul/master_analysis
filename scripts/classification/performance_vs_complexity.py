@@ -1,8 +1,8 @@
 # Imports
 from master_scripts.classes import Experiment
 from master_scripts.data_functions import (normalize_image_data, get_tf_device,
-                                           get_git_root,
-					   normalize_image_data_elementwise)
+                                           get_git_root, import_real_data)
+from master_scripts.analysis_functions import anodedata_classification
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import (Conv2D, Dense, Flatten, MaxPooling2D,
                                      Dropout)
@@ -19,19 +19,38 @@ config = {
     },
     'random_seed': 120,
     'data': {
-        'images': "images_full.npy",
-        'labels': "labels_full.npy",
+        'images_sim': "images_200k.npy",
+        'labels_sim': "labels_200k.npy",
     },
 }
 
 # ================== Import Data ==================
+
+# import simulated data
 DATA_PATH = get_git_root() + "data/simulated/"
 images = np.load(DATA_PATH + config['data']['images'])
 images = images.reshape(images.shape[0], 16, 16, 1)
 labels = np.load(DATA_PATH + config['data']['labels'])
 
+# import real data
+config_real = {
+    'DATA_PATH': "../../data/real/",
+    'DATA_FILENAME': "anodedata_500k.txt",
+    'MODEL_PATH': "../../models/",
+    'RESULTS_PATH': "../../results/",
+    'CLASSIFIER': "367e35da671b.h5",
+    'ENERGY_MODEL': "2137bd6d101c.h5",
+    'POSITIONS_MODEL': "337cafc233f7.h5",
+}
+
+
+events, images_real = import_real_data(
+    config_real['DATA_PATH'] + config_real['DATA_FILENAME'])  # Images not normalized
+images_real = images.reshape(images.shape[0], 16, 16, 1)
+images_real = normalize_image_data(images)  # Normalize images
+
 # log-scale the images if desireable
-config['scaling'] = "minmax_elementwise"
+config['scaling'] = "minmax"
 if "np.log" in config['scaling']:
     images = np.log1p(images)
 
@@ -119,6 +138,11 @@ with tf.device(get_tf_device(20)):
         mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
         model.save(mpath)
         experiments[k] = experiment.id
+
+        # Predict on experimental data and output results
+        if "logistic" in k or "dense" in k:
+            experiment.model.predict(images_real)
+
 print("Performed experiments:")
 for k, v in experiments.items():
     print(k, ":", v)
