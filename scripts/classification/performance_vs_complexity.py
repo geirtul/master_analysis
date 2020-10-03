@@ -73,7 +73,7 @@ with tf.device(get_tf_device(20)):
 
     # Small Dense network
     model = Sequential()
-    model.add(InputLayer(input_shape=(images.shape[1],)))
+    model.add(InputLayer(input_shape=(256,)))
     model.add(Dense(10, activation='relu'))
     model.compile(
         optimizer='adam',
@@ -84,7 +84,7 @@ with tf.device(get_tf_device(20)):
 
     # Large dense network
     model = Sequential()
-    model.add(InputLayer(input_shape=(images.shape[1],)))
+    model.add(InputLayer(input_shape=(256,)))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
@@ -162,7 +162,7 @@ with tf.device(get_tf_device(20)):
             )
         else:
             pred = experiment.model.predict(
-                images_real.reshape(images_real)
+                images_real,
             )
         classification = (pred > 0.5).astype(int)
         tmp = anodedata_classification(events, classification)
