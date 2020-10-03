@@ -75,6 +75,7 @@ with tf.device(get_tf_device(20)):
     model = Sequential()
     model.add(InputLayer(input_shape=(256,)))
     model.add(Dense(10, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
@@ -90,6 +91,7 @@ with tf.device(get_tf_device(20)):
     model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
     model.add(Dense(100, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
