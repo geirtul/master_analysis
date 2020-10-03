@@ -30,7 +30,9 @@ config = {
 # import simulated data
 DATA_PATH = get_git_root() + "data/simulated/"
 images = np.load(DATA_PATH + config['data']['images_sim'])
+print(images.shape)
 images = images.reshape(images.shape[0], 16, 16, 1)
+print(images.shape)
 labels = np.load(DATA_PATH + config['data']['labels_sim'])
 
 # import real data
@@ -62,7 +64,7 @@ with tf.device(get_tf_device(20)):
     models = {}
     # Logistic
     model = Sequential()
-    model.add(InputLayer(input_shape=(images.shape[1],)))
+    model.add(InputLayer(input_shape=(256,)))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
