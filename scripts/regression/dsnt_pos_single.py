@@ -5,8 +5,7 @@ from master_scripts.data_functions import (normalize_image_data,
                                            event_indices,
                                            get_tf_device,
                                            get_git_root)
-from master_scripts.analysis_functions import dsnt_mse
-from tensorflow.keras.layers import Conv2D, Dense, Flatten, MaxPooling2D
+from tensorflow.keras.layers import Conv2D
 import tensorflow as tf
 import numpy as np
 import warnings
@@ -15,7 +14,7 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 20,
+        'epochs': 10,
         'batch_size': 64,
     },
     'random_seed': 120,
@@ -42,12 +41,20 @@ with tf.device(get_tf_device(20)):
     inputs = tf.keras.Input(shape=(16, 16, 1))
     x = Conv2D(32, kernel_size=(3, 3), activation='relu',
                padding=padding)(inputs)
-    x = Conv2D(64, (3, 3), activation='relu', padding=padding)(inputs)
+    x = Conv2D(64, kernel_size=(3, 3), activation='relu',
+               padding=padding)(x)
+    x = Conv2D(1, kernel_size=(3, 3), activation='relu',
+               padding=padding)(x)
     outputs = DSNT()(x)
-    model = tf.keras.Model(inputs=inputs, outputs=outputs)
+    model = tf.keras.Model(inputs=inputs, outputs=outputs[1])
+    prediction_model = tf.keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
         optimizer='adam',
-        loss=dsnt_mse,
+        loss='mse',
+    )
+    prediction_model.compile(
+        optimizer='adam',
+        loss='mse',
     )
     print(model.summary())
 
@@ -64,4 +71,12 @@ with tf.device(get_tf_device(20)):
     )
     experiment.save()
     mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
-    model.save(mpath)
+    prediction_model.save(mpath)
+    heatmaps, coords = prediction_model.predict(
+        images[single_indices][experiment.indices['fold_0']['val_idx']]
+    )
+    np.save("dsnt_heatmaps_pred.npy", heatmaps)
+    np.save("dsnt_coords_pred.npy", coords)
+    print("Finished experiment.")
+    print("Name:", search_name)
+    print("id:", experiment.id)
