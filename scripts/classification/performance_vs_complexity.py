@@ -5,7 +5,7 @@ from master_scripts.data_functions import (normalize_image_data, get_tf_device,
 from master_scripts.analysis_functions import anodedata_classification
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import (Conv2D, Dense, Flatten, MaxPooling2D,
-                                     Dropout)
+                                     Dropout, InputLayer)
 import tensorflow as tf
 import numpy as np
 import json
