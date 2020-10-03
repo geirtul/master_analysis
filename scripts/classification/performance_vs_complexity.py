@@ -62,7 +62,8 @@ with tf.device(get_tf_device(20)):
     models = {}
     # Logistic
     model = Sequential()
-    model.add(Dense(1, activation='sigmoid', input_shape=(256,)))
+    model.add(InputLayer(input_shape=(images.shape[1],)))
+    model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
