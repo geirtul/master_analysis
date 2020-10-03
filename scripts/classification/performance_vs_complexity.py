@@ -169,7 +169,7 @@ with tf.device(get_tf_device(20)):
         print(classification.shape)
         tmp = anodedata_classification(events, classification)
         # Store the events as a json file
-        out_filename = config['RESULTS_PATH'] \
+        out_filename = config_real['RESULTS_PATH'] \
             + "events_classified_" \
             + config_real["DATA_FILENAME"][:-4] \
             + "_C_" + k \
