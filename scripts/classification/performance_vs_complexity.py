@@ -165,8 +165,6 @@ with tf.device(get_tf_device(20)):
                 images_real,
             )
         classification = (pred > 0.5).astype(int)
-        print(images_real.shape)
-        print(classification.shape)
         tmp = anodedata_classification(events, classification)
         # Store the events as a json file
         out_filename = config_real['RESULTS_PATH'] \
