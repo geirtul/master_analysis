@@ -98,6 +98,7 @@ with tf.device(get_tf_device(20)):
     models['dense_100_5'] = model
 
     # Small convolutional network
+    model = Sequential()
     model.add(
         Conv2D(10, kernel_size=3, activation='relu', input_shape=(16, 16, 1),
         padding='same')
