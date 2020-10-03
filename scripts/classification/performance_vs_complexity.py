@@ -114,6 +114,7 @@ with tf.device(get_tf_device(20)):
     models['cnn_shallow'] = model
     
     # Large convolutional network, deeper and wider
+    model = Sequential()
     model.add(
         Conv2D(32, kernel_size=3, activation='relu', input_shape=(16, 16, 1),
         padding='same')
