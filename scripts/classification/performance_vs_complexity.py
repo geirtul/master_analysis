@@ -47,7 +47,7 @@ config_real = {
 
 events, images_real = import_real_data(
     config_real['DATA_PATH'] + config_real['DATA_FILENAME'])  # Images not normalized
-images_real = images.reshape(images_real.shape[0], 16, 16, 1)
+images_real = images_real.reshape(images_real.shape[0], 16, 16, 1)
 images_real = normalize_image_data(images_real)  # Normalize images
 
 # log-scale the images if desireable
