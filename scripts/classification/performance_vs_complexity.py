@@ -136,6 +136,7 @@ with tf.device(get_tf_device(20)):
 
     # Run experiments
     for k, m in models.items():
+        print("Running model:", k)
         experiment = Experiment(
             model=m,
             config=config,
