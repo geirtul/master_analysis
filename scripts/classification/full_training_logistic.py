@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 20,
+        'epochs': 10,
         'batch_size': 64,
     },
     'random_seed': 120,
