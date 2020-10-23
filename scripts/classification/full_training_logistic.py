@@ -61,6 +61,4 @@ with tf.device(get_tf_device(20)):
         normalize_image_data(images),
         labels,
     )
-    experiment.save()
-    mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
-    model.save(mpath)
+    experiment.save(save_model=True, save_indices=False)
