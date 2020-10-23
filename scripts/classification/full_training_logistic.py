@@ -62,3 +62,4 @@ with tf.device(get_tf_device(20)):
         labels,
     )
     experiment.save(save_model=True, save_indices=False)
+    print("Finished experiment:", experiment.id)
