@@ -21,7 +21,7 @@ config = {
         'labels': "labels_full.npy",
     },
     'kfold_args': {
-        'shuffle': True,
+        'shuffle': False,
     }
 }
 
