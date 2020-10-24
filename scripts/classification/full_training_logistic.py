@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 # ================== Config =======================
 config = {
     'fit_args': {
-        'epochs': 10,
+        'epochs': 3,
         'batch_size': 64,
     },
     'random_seed': 120,
@@ -57,7 +57,7 @@ with tf.device(get_tf_device(20)):
         model_type="classification",
         experiment_name="full_training_logistic"
     )
-    experiment.run(
+    experiment.run_kfold(
         normalize_image_data(images).reshape(images.shape[0], 256),
         labels,
     )
