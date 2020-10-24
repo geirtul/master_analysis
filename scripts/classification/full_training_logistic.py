@@ -20,8 +20,10 @@ config = {
         'images': "images_full.npy",
         'labels': "labels_full.npy",
     },
+    'kfold_args': {
+        'shuffle': True,
+    }
 }
-
 
 # ================== Callbacks ====================
 
