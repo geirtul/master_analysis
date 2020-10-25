@@ -4,26 +4,15 @@ from master_scripts.data_functions import (normalize_image_data, get_tf_device,
                                            get_git_root)
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, InputLayer
+import json
 import tensorflow as tf
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
 
 # ================== Config =======================
-config = {
-    'fit_args': {
-        'epochs': 3,
-        'batch_size': 64,
-    },
-    'random_seed': 120,
-    'data': {
-        'images': "images_full.npy",
-        'labels': "labels_full.npy",
-    },
-    'kfold_args': {
-        'shuffle': False,
-    }
-}
+with open("results_experiment_config.json", 'r') as fp:
+    config = json.load(fp)
 
 # ================== Callbacks ====================
 
