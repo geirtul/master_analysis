@@ -3,7 +3,7 @@ from master_scripts.classes import Experiment
 from master_scripts.data_functions import (normalize_image_data, get_tf_device,
                                            get_git_root)
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, InputLayer
+from tensorflow.keras.layers import Dense, Conv2D, Flatten
 import json
 import tensorflow as tf
 import numpy as np
@@ -33,8 +33,11 @@ tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
     # Small Dense network
     model = Sequential()
-    model.add(InputLayer(input_shape=(256,)))
-    model.add(Dense(10, activation='relu'))
+    model.add(
+        Conv2D(10, kernel_size=3, activation='relu', input_shape=(16, 16, 1),
+               padding='same')
+    )
+    model.add(Flatten())
     model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
@@ -47,10 +50,10 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="classification",
-        experiment_name="full_training_dense_small"
+        experiment_name="full_training_cnn_small"
     )
     experiment.run_kfold(
-        normalize_image_data(images).reshape(images.shape[0], 256),
+        normalize_image_data(images),
         labels,
     )
     experiment.save(save_model=True, save_indices=False)
