@@ -35,7 +35,7 @@ images = np.concatenate((images, images, images), axis=-1)
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
-    # Small Dense network
+    # Build model
     model = pretrained_vgg16(input_dim=(16, 16, 3))
     model.compile(
         optimizer='adam',
