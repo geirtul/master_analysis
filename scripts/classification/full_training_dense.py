@@ -1,6 +1,6 @@
 # Imports
 from master_scripts.classes import Experiment
-from master_scripts.data_functions import (normalize_image_data, get_tf_device,
+from master_scripts.data_functions import (get_tf_device,
                                            get_git_root)
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, InputLayer
@@ -50,7 +50,7 @@ with tf.device(get_tf_device(20)):
         experiment_name="full_training_dense_small"
     )
     experiment.run_kfold(
-        normalize_image_data(images).reshape(images.shape[0], 256),
+        images,
         labels,
     )
     experiment.save(save_model=True, save_indices=False)
