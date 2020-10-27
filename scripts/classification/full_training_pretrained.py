@@ -36,7 +36,7 @@ images = np.concatenate((images, images, images), axis=-1)
 tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
     # Build model
-    model = pretrained_model("VGG", input_dim=(16, 16, 3))
+    model = pretrained_model("VGG16", input_dim=(16, 16, 3))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
