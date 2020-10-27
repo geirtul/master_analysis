@@ -2,7 +2,7 @@
 from master_scripts.classes import Experiment
 from master_scripts.data_functions import (get_tf_device,
                                            get_git_root)
-from master_scripts.models_pretrained import pretrained_vgg16
+from master_scripts.models_pretrained import pretrained_model
 # from tensorflow.keras.layers import Dense
 import json
 import tensorflow as tf
@@ -36,7 +36,7 @@ images = np.concatenate((images, images, images), axis=-1)
 tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
     # Build model
-    model = pretrained_vgg16(input_dim=(16, 16, 3))
+    model = pretrained_model("VGG", input_dim=(16, 16, 3))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
