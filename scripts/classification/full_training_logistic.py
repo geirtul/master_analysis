@@ -49,7 +49,7 @@ with tf.device(get_tf_device(20)):
         experiment_name="full_training_logistic"
     )
     experiment.run_kfold(
-        images,
+        images.reshape(images.shape[0], 256),
         labels,
     )
     experiment.save(save_model=True, save_indices=False)
