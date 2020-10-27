@@ -28,11 +28,15 @@ config['scaling'] = "minmax"
 if "np.log" in config['scaling']:
     images = np.log1p(images)
 
+# For the pretrained vgg model we have to use data with 3 channels.
+# This is solved by concatenating the images with themselves
+images = np.concatenate((images, images, images), axis=-1)
+
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
     # Small Dense network
-    model = pretrained_vgg16(input_dim=(16, 16, 1))
+    model = pretrained_vgg16(input_dim=(16, 16, 3))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
