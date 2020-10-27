@@ -3,7 +3,7 @@ from master_scripts.classes import Experiment
 from master_scripts.data_functions import (normalize_image_data, get_tf_device,
                                            get_git_root)
 from master_scripts.models_pretrained import pretrained_vgg16
-from tensorflow.keras.layers import Dense
+# from tensorflow.keras.layers import Dense
 import json
 import tensorflow as tf
 import numpy as np
@@ -37,7 +37,6 @@ tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
     # Small Dense network
     model = pretrained_vgg16(input_dim=(16, 16, 3))
-    model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
