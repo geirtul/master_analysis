@@ -34,7 +34,7 @@ with tf.device(get_tf_device(20)):
     # Small CNN
     model = Sequential()
     model.add(
-        Conv2D(10, kernel_size=3, activation='relu', input_shape=(16, 16, 1),
+        Conv2D(8, kernel_size=3, activation='relu', input_shape=(16, 16, 1),
                padding='same')
     )
     model.add(Flatten())
