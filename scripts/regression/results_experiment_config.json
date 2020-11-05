@@ -6,7 +6,9 @@
   "random_seed": 120,
   "data": {
     "images": "images_full.npy",
-    "labels": "labels_full.npy"
+    "labels": "labels_full.npy",
+    "positions": "positions_full.npy",
+    "energies": "energies_full"
   },
   "kfold_args": {
     "shuffle": false

@@ -31,7 +31,7 @@ if "np.log" in config['scaling']:
 # set tf random seed
 tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
-    # Small Dense network
+    # Small CNN
     model = Sequential()
     model.add(
         Conv2D(10, kernel_size=3, activation='relu', input_shape=(16, 16, 1),
