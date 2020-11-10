@@ -53,7 +53,7 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_dense_small",
+        experiment_name="generate_results_pretrained_small",
     )
     experiment.run_kfold(
         images[single_indices],
