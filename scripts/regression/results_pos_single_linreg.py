@@ -50,7 +50,7 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_lingreg",
+        experiment_name="generate_results_pos_single_linreg",
     )
     experiment.run_kfold(
         images[single_indices],
