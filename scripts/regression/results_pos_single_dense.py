@@ -38,7 +38,7 @@ tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
     padding = 'same'
     model = Sequential()
-    model.add(Dense(10, activation='relu', input_shape=(265,)))
+    model.add(Dense(10, activation='relu', input_shape=(256,)))
     model.add(Dense(2, activation='linear'))
     model.compile(
         loss='mse',
