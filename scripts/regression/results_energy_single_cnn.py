@@ -23,7 +23,6 @@ with open("results_experiment_config.json", 'r') as fp:
 # ================== Import Data ==================
 DATA_PATH = get_git_root() + "data/simulated/"
 images = np.load(DATA_PATH + config['data']['images'])
-images = images.reshape(images.shape[0], 256)
 energies = np.load(DATA_PATH + config['data']['energies'])
 positions = np.load(DATA_PATH + config['data']['positions'])
 
