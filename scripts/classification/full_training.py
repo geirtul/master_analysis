@@ -2,7 +2,7 @@
 from master_scripts.classes import Experiment
 from master_scripts.data_functions import (normalize_image_data, get_tf_device,
                                            get_git_root,
-					   normalize_image_data_elementwise)
+                                           normalize_image_data_elementwise)
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import (Conv2D, Dense, Flatten, MaxPooling2D,
                                      Dropout)
@@ -35,7 +35,7 @@ images = images.reshape(images.shape[0], 16, 16, 1)
 labels = np.load(DATA_PATH + config['data']['labels'])
 
 # log-scale the images if desireable
-config['scaling'] = "minmax_elementwise"
+config['scaling'] = "minmax"
 if "np.log" in config['scaling']:
     images = np.log1p(images)
 
@@ -46,8 +46,8 @@ with tf.device(get_tf_device(20)):
     padding = 'same'
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(3, 3),
-                    activation='relu', input_shape=(16, 16, 1),
-                    padding=padding))
+                     activation='relu', input_shape=(16, 16, 1),
+                     padding=padding))
     model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Conv2D(64, (3, 3), activation='relu', padding=padding))
@@ -61,33 +61,16 @@ with tf.device(get_tf_device(20)):
         metrics=['accuracy']
     )
 
-    # Project model
-    #model = Sequenitial()
-    #model.add(Conv2D(32, kernel_size=(3, 3),
-    #                 activation='relu', input_shape=(16, 16, 1)))
-    #model.add(Conv2D(64, (3, 3), activation='relu'))
-    #model.add(MaxPooling2D(pool_size=(2, 2)))
-    #model.add(Dropout(0.25))
-    #model.add(Dense(128, activation='relu'))
-    #model.add(Dropout(0.5))
-    ##model.add(Flatten())
-    #model.add(Dense(2, activation='softmax'))
-    #model.compile(
-    #    loss='categorical_crossentropy',
-    #    optimizer='adadelta',
-    #    metrics=['accuracy']
-    #)
-
     # Run experiment
     experiment = Experiment(
         model=model,
         config=config,
         model_type="classification",
-        experiment_name="full_training_classifier_elementwise_scaling"
+        experiment_name="full_training_classifier"
     )
     experiment.run(
-        normalize_image_data_elementwise(images),
-        np.eye(2)[labels.flatten()],
+        images,
+        labels,
     )
     experiment.save()
     mpath = experiment.config['path_args']['models'] + experiment.id + ".h5"
