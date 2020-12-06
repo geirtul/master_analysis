@@ -51,11 +51,12 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="classification",
-        experiment_name="full_training_pretrained_vgg16"
+        experiment_name="full_training_pretrained_vgg16_pixelmod"
     )
     experiment.run_kfold(
         images,
         labels,
     )
     experiment.save(save_model=True, save_indices=False)
-    print("Finished experiment:", experiment.id)
+    print("Finished experiment:", experiment.id, " named ",
+          experiment.experiment_name)

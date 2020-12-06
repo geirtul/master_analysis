@@ -47,11 +47,12 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="classification",
-        experiment_name="full_training_dense_small"
+        experiment_name="full_training_dense_small_pixelmod"
     )
     experiment.run_kfold(
         images.reshape(images.shape[0], 256),
         labels,
     )
     experiment.save(save_model=True, save_indices=False)
-    print("Finished experiment:", experiment.id)
+    print("Finished experiment:", experiment.id, " named ",
+          experiment.experiment_name)
