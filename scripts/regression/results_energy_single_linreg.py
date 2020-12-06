@@ -50,11 +50,12 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_energies_single_linreg",
+        experiment_name="generate_results_energies_single_linreg_pixelmod",
     )
     experiment.run_kfold(
         images[single_indices],
         energies[single_indices, 0],
     )
     experiment.save(save_model=True, save_indices=False)
-    print("Finished experiment:", experiment.id)
+    print("Finished experiment:", experiment.id, " named ",
+          experiment.experiment_name)

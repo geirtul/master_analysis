@@ -54,11 +54,12 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_energies_single_cnn",
+        experiment_name="generate_results_energies_single_pretrained_pixelmod",
     )
     experiment.run_kfold(
         images[double_indices],
         energies[double_indices],
     )
     experiment.save(save_model=True, save_indices=False)
-    print("Finished experiment:", experiment.id)
+    print("Finished experiment:", experiment.id, " named ",
+          experiment.experiment_name)

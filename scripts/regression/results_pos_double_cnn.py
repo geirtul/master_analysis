@@ -54,11 +54,12 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_double_pos_cnn_small",
+        experiment_name="generate_results_double_pos_cnn_small_pixelmod",
     )
     experiment.run_kfold(
         images[double_indices],
         normalize_position_data(positions[double_indices]),
     )
     experiment.save(save_model=True, save_indices=False)
-    print("Finished experiment:", experiment.id)
+    print("Finished experiment:", experiment.id, " named ",
+          experiment.experiment_name)
