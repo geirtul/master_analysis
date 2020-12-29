@@ -11,6 +11,6 @@
     "energies": "energies_full.npy"
   },
   "kfold_args": {
-    "shuffle": false
+    "shuffle": true
   }
 }
