@@ -54,7 +54,7 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_energies_single_pretrained_pixelmod",
+        experiment_name="generate_results_energies_double_pretrained_pixelmod",
     )
     experiment.run_kfold(
         images[double_indices],
