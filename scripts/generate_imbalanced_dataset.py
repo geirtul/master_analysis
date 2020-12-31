@@ -10,7 +10,8 @@ positions = np.load(repo_root + "data/simulated/positions_full.npy")
 energies = np.load(repo_root + "data/simulated/energies_full.npy")
 labels = np.load(repo_root + "data/simulated/labels_full.npy")
 
-imba_indices = generate_imbalanced_dataset_indices(positions, 0.05)
+imba_indices = generate_imbalanced_dataset_indices(positions, 0.05,
+random_seed=120)
 
 np.save(repo_root + "data/simulated/images_full_pixelmod_imbalanced.npy",
         images[imba_indices])
