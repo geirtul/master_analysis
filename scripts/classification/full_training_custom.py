@@ -55,7 +55,7 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="classification",
-        experiment_name="full_training_custom"
+        experiment_name="full_training_custom_pixelmod"
     )
     experiment.run_kfold(
         images,

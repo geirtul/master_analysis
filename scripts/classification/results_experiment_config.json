@@ -5,7 +5,7 @@
   },
   "random_seed": 120,
   "data": {
-    "images": "images_full.npy",
+    "images": "images_full_pixelmod.npy",
     "labels": "labels_full.npy",
     "positions": "positions_full.npy",
     "energies": "energies_full.npy"
