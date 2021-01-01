@@ -5,10 +5,10 @@
   },
   "random_seed": 120,
   "data": {
-    "images": "images_full_pixelmod.npy",
-    "labels": "labels_full.npy",
-    "positions": "positions_full.npy",
-    "energies": "energies_full.npy"
+    "images": "images_full_pixelmod_imbalanced.npy",
+    "labels": "labels_full_pixelmod_imbalanced.npy",
+    "positions": "positions_full_pixelmod_imbalanced.npy",
+    "energies": "energies_full_pixelmod_imbalanced.npy"
   },
   "kfold_args": {
     "shuffle": true
