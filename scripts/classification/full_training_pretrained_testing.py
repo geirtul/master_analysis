@@ -6,6 +6,7 @@ from master_scripts.models_pretrained import pretrained_model
 from tensorflow.keras.layers import Dense
 import json
 import tensorflow as tf
+import tensorflow_addons as tfa
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -36,13 +37,13 @@ images = np.concatenate((images, images, images), axis=-1)
 tf.random.set_seed(config['random_seed'])
 with tf.device(get_tf_device(20)):
     # Build model
-    model = pretrained_model("VGG16", input_dim=(16, 16, 3), trainable=True)
+    model = pretrained_model("VGG16", input_dim=(16, 16, 3), trainable=False)
     model.add(Dense(10, activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
-        metrics=['accuracy']
+        metrics=['accuracy'],
     )
 
     # Run experiment
@@ -50,12 +51,40 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="classification",
-        experiment_name="full_training_pretrained_vgg16_fine_tuning_dense"
+        experiment_name="full_training_pretrained_vgg16_pretrain_step_dense"
     )
-    experiment.run_kfold(
+    experiment.run(
         images,
         labels,
     )
-    experiment.save(save_model=True, save_indices=False)
-    print("Finished experiment:", experiment.id, " named ",
-          experiment.experiment_name)
+    # Init new model with dense layers pretrained.
+    model_two = pretrained_model("VGG16", input_dim=(16, 16, 3), trainable=True)
+    model_two.add(model.layers[-2])
+    model_two.add(model.layers[-1])
+    model_two.compile(
+        optimizer=tf.keras.optimizers.Adam(0.00001),
+        loss='binary_crossentropy',
+        metrics=['accuracy'],
+    )
+    del experiment
+    del model
+
+    # Run training again, fine-tuning the conv blocks, too.
+    experiment_two = Experiment(
+        model=model_two,
+        config=config,
+        model_type="classification",
+        experiment_name="full_training_pretrained_vgg16_fine_tuning_dense"
+    )
+    experiment_two.run(
+        images,
+        labels,
+    )
+    #experiment.run_kfold(
+    #    images,
+    #    labels,
+    #    f1_print=True,
+    #)
+    experiment_two.save(save_model=True, save_indices=False)
+    print("Finished experiment:", experiment_two.id, " named ",
+          experiment_two.experiment_name)
