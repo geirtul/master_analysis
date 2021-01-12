@@ -40,7 +40,8 @@ tf.random.set_seed(config['random_seed'])
 images = np.concatenate((images, images, images), axis=-1)
 # ================== Import Data ==================
 with tf.device(get_tf_device(20)):
-    model = pretrained_model("VGG16", input_dim=(16, 16, 3))
+    model = pretrained_model("VGG16", input_dim=(16, 16, 3), trainable=False)
+    model.add(Dense(10, activation='relu'))
     model.add(Dense(4, activation='linear'))
     model.compile(
         loss='mse',
@@ -53,12 +54,37 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_pos_double_pretrained_pixelmod",
+        experiment_name="generate_results_pos_double_pretrained",
     )
     experiment.run_kfold(
         images[double_indices],
         normalize_position_data(positions[double_indices]),
     )
-    experiment.save(save_model=True, save_indices=False)
+    experiment.save(save_model=False, save_indices=False)
     print("Finished experiment:", experiment.id, " named ",
           experiment.experiment_name)
+
+    # Fine tune the model with new experiment.
+    model_tune = pretrained_model(
+        "VGG16", input_dim=(16, 16, 3), trainable=True)
+    model_tune.add(model.layers[-2])
+    model_tune.add(model.layers[-1])
+    model_tune.compile(
+        optimizer=tf.keras.optimizers.Adam(0.00001),
+        loss='mse',
+    )
+    config_tune = config
+    config_tune['fit_args']['epochs'] = 1
+    experiment_tune = Experiment(
+        model=model_tune,
+        config=config_tune,
+        model_type="regression",
+        experiment_name="generate_results_pos_double_pretrained_finetune",
+    )
+    experiment_tune.run_kfold(
+        images[double_indices],
+        normalize_position_data(positions[double_indices]),
+    )
+    experiment_tune.save(save_model=True, save_indices=False)
+    print("Finished experiment:", experiment_tune.id, " named ",
+          experiment_tune.experiment_name)

@@ -41,6 +41,7 @@ images = np.concatenate((images, images, images), axis=-1)
 # ================== Import Data ==================
 with tf.device(get_tf_device(20)):
     model = pretrained_model("VGG16", input_dim=(16, 16, 3), trainable=False)
+    model.add(Dense(10, activation='relu'))
     model.add(Dense(2, activation='linear'))
     model.compile(
         loss='mse',
@@ -67,11 +68,11 @@ with tf.device(get_tf_device(20)):
     # Fine tune the model with new experiment.
     model_tune = pretrained_model(
         "VGG16", input_dim=(16, 16, 3), trainable=True)
+    model_tune.add(model.layers[-2])
     model_tune.add(model.layers[-1])
     model_tune.compile(
         optimizer=tf.keras.optimizers.Adam(0.00001),
-        loss='binary_crossentropy',
-        metrics=['accuracy', 'sensitivity'],
+        loss='mse',
     )
     config_tune = config
     config_tune['fit_args']['epochs'] = 1
@@ -87,4 +88,5 @@ with tf.device(get_tf_device(20)):
     )
     experiment_tune.save(save_model=True, save_indices=False)
     print("Finished experiment:", experiment_tune.id, " named ",
-          experiment_tune.experiment_name)
+          experiment_tune.experiment_name, "with data ",
+          config_tune['data']['images'])
