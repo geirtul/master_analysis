@@ -57,11 +57,12 @@ with tf.device(get_tf_device(20)):
         labels,
     )
     experiment.save(save_model=False, save_indices=False)
-    print("Finished experiment:", experimen.id, " named ",
+    print("Finished experiment:", experiment.id, " named ",
           experiment.experiment_name)
 
     # Fine tune the model with new experiment.
-    model_tune = pretrained_model("VGG16", input_dim=(16, 16, 3), trainable=True)
+    model_tune = pretrained_model(
+        "VGG16", input_dim=(16, 16, 3), trainable=True)
     model_tune.add(model.layers[-2])
     model_tune.add(model.layers[-1])
     model_tune.compile(
@@ -84,5 +85,3 @@ with tf.device(get_tf_device(20)):
     experiment_tune.save(save_model=True, save_indices=False)
     print("Finished experiment:", experiment_tune.id, " named ",
           experiment_tune.experiment_name)
-
-    
