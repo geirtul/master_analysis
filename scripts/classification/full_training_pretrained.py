@@ -42,7 +42,7 @@ with tf.device(get_tf_device(20)):
     model.compile(
         optimizer='adam',
         loss='binary_crossentropy',
-        metrics=['accuracy', 'sensitivity']
+        metrics=['accuracy']
     )
 
     # Run experiment
@@ -68,7 +68,7 @@ with tf.device(get_tf_device(20)):
     model_tune.compile(
         optimizer=tf.keras.optimizers.Adam(0.00001),
         loss='binary_crossentropy',
-        metrics=['accuracy', 'sensitivity'],
+        metrics=['accuracy'],
     )
     config_tune = config
     config_tune['fit_args']['epochs'] = 1
