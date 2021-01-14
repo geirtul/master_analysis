@@ -57,8 +57,8 @@ with tf.device(get_tf_device(20)):
         labels,
     )
     experiment.save(save_model=False, save_indices=False)
-    print("Finished experiment:", experiment.id, " named ",
-          experiment.experiment_name)
+    # print("Finished experiment:", experiment.id, " named ",
+    #      experiment.experiment_name)
 
     # Fine tune the model with new experiment.
     model_tune = pretrained_model(
