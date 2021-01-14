@@ -51,7 +51,7 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_energies_single_dense_pixelmod",
+        experiment_name="results_energies_single_dense",
     )
     experiment.run_kfold(
         images[single_indices],
@@ -59,4 +59,4 @@ with tf.device(get_tf_device(20)):
     )
     experiment.save(save_model=True, save_indices=False)
     print("Finished experiment:", experiment.id, " named ",
-          experiment.experiment_name)
+          experiment.experiment_name, "with data", config['data']['images'])
