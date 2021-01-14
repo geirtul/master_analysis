@@ -55,16 +55,16 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_energies_single_pretrained",
+        experiment_name="results_energies_single_pretrained",
     )
     experiment.run_kfold(
         images[single_indices],
         energies[single_indices, 0],
     )
     experiment.save(save_model=False, save_indices=False)
-    print("Finished experiment:", experiment.id, " named ",
-          experiment.experiment_name, "with data ",
-          config['data']['images'])
+    # print("Finished experiment:", experiment.id, " named ",
+    #      experiment.experiment_name, "with data ",
+    #      config['data']['images'])
 
     # Fine tune the model with new experiment.
     model_tune = pretrained_model(
@@ -77,11 +77,12 @@ with tf.device(get_tf_device(20)):
     )
     config_tune = config
     config_tune['fit_args']['epochs'] = 1
+    config_tune['compile_args']['adam_lr'] = 1E-5
     experiment_tune = Experiment(
         model=model_tune,
         config=config_tune,
         model_type="regression",
-        experiment_name="generate_results_energies_single_pretrained_finetune",
+        experiment_name="results_energies_single_pretrained_finetune",
     )
     experiment_tune.run_kfold(
         images[single_indices],

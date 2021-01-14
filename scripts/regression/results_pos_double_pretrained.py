@@ -54,15 +54,15 @@ with tf.device(get_tf_device(20)):
         model=model,
         config=config,
         model_type="regression",
-        experiment_name="generate_results_pos_double_pretrained",
+        experiment_name="results_pos_double_pretrained",
     )
     experiment.run_kfold(
         images[double_indices],
         normalize_position_data(positions[double_indices]),
     )
     experiment.save(save_model=False, save_indices=False)
-    print("Finished experiment:", experiment.id, " named ",
-          experiment.experiment_name)
+    # print("Finished experiment:", experiment.id, " named ",
+    #      experiment.experiment_name)
 
     # Fine tune the model with new experiment.
     model_tune = pretrained_model(
@@ -75,11 +75,12 @@ with tf.device(get_tf_device(20)):
     )
     config_tune = config
     config_tune['fit_args']['epochs'] = 1
+    config_tune['compile_args']['adam_lr'] = 1E-5
     experiment_tune = Experiment(
         model=model_tune,
         config=config_tune,
         model_type="regression",
-        experiment_name="generate_results_pos_double_pretrained_finetune",
+        experiment_name="results_pos_double_pretrained_finetune",
     )
     experiment_tune.run_kfold(
         images[double_indices],
@@ -87,4 +88,5 @@ with tf.device(get_tf_device(20)):
     )
     experiment_tune.save(save_model=True, save_indices=False)
     print("Finished experiment:", experiment_tune.id, " named ",
-          experiment_tune.experiment_name)
+          experiment_tune.experiment_name, "with data ",
+          config_tune['data']['images'])
