@@ -72,6 +72,8 @@ with tf.device(get_tf_device(20)):
     )
     config_tune = config
     config_tune['fit_args']['epochs'] = 1
+    config_tune['compile_args']['adam_lr'] = 1E-5
+
     experiment_tune = Experiment(
         model=model_tune,
         config=config_tune,
@@ -84,4 +86,4 @@ with tf.device(get_tf_device(20)):
     )
     experiment_tune.save(save_model=True, save_indices=False)
     print("Finished experiment:", experiment_tune.id, " named ",
-          experiment_tune.experiment_name)
+          experiment_tune.experiment_name, "with data", config['data']['images'])

@@ -64,7 +64,7 @@ with tf.device(get_tf_device(20)):
     experiment.save(save_model=False, save_indices=False)
     print("Finished experiment:", experiment.id, " named ",
           experiment.experiment_name, "with data ",
-          config_tune['data']['images'])
+          config['data']['images'])
 
     # Fine tune the model with new experiment.
     model_tune = pretrained_model(

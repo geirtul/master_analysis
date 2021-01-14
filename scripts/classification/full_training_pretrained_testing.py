@@ -70,6 +70,7 @@ with tf.device(get_tf_device(20)):
     del model
 
     # Run training again, fine-tuning the conv blocks, too.
+    config['fit_args']['epochs'] = 1 #fine-tune for just one epoch
     experiment_two = Experiment(
         model=model_two,
         config=config,
