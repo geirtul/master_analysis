@@ -1,0 +1,176 @@
+{
+  "loss": "binary_crossentropy",
+  "optimizer": "{'name': 'Adam', 'learning_rate': 1e-05, 'decay': 0.0, 'beta_1': 0.9, 'beta_2': 0.999, 'epsilon': 1e-07, 'amsgrad': False}",
+  "experiment_config": {
+    "fit_args": {
+      "batch_size": 64,
+      "epochs": 1,
+      "verbose": 2
+    },
+    "kfold_args": {
+      "n_splits": 5,
+      "shuffle": true
+    },
+    "path_args": {
+      "repo_root": "/shared/users/geirtul/git/master/master_analysis/",
+      "models": "/shared/users/geirtul/git/master/master_analysis/models/",
+      "figures": "/shared/users/geirtul/git/master/master_analysis/figures/",
+      "experiments": "/shared/users/geirtul/git/master/master_analysis/experiments/",
+      "results": "/shared/users/geirtul/git/master/master_analysis/results",
+      "model_config": "/shared/users/geirtul/git/master/master_analysis/experiments/model_config/"
+    },
+    "random_seed": 120,
+    "data": {
+      "images": "images_full_pixelmod.npy",
+      "labels": "labels_full.npy",
+      "positions": "positions_full.npy",
+      "energies": "energies_full.npy"
+    },
+    "compile_args": {
+      "adam_lr": 1e-05,
+      "loss": "binary_crossentropy",
+      "metrics": [
+        "accuracy"
+      ]
+    },
+    "scaling": "minmax"
+  },
+  "model_type": "classification",
+  "experiment_name": "full_training_pretrained_finetune",
+  "experiment_id": "6aebbcd131d1",
+  "datetime": "2021-01-15 08:52:31",
+  "history": {
+    "fold_0": {
+      "loss": [
+        0.14936791360378265
+      ],
+      "accuracy": [
+        0.947818398475647
+      ],
+      "val_loss": [
+        0.10959280282258987
+      ],
+      "val_accuracy": [
+        0.9650447368621826
+      ]
+    },
+    "fold_1": {
+      "loss": [
+        0.15088802576065063
+      ],
+      "accuracy": [
+        0.9460960626602173
+      ],
+      "val_loss": [
+        0.12452592700719833
+      ],
+      "val_accuracy": [
+        0.9614815711975098
+      ]
+    },
+    "fold_2": {
+      "loss": [
+        0.15093451738357544
+      ],
+      "accuracy": [
+        0.9467716813087463
+      ],
+      "val_loss": [
+        0.10070580989122391
+      ],
+      "val_accuracy": [
+        0.9691842198371887
+      ]
+    },
+    "fold_3": {
+      "loss": [
+        0.14974571764469147
+      ],
+      "accuracy": [
+        0.9467657804489136
+      ],
+      "val_loss": [
+        0.10719644278287888
+      ],
+      "val_accuracy": [
+        0.9661394953727722
+      ]
+    },
+    "fold_4": {
+      "loss": [
+        0.1536988765001297
+      ],
+      "accuracy": [
+        0.9446710348129272
+      ],
+      "val_loss": [
+        0.10558516532182693
+      ],
+      "val_accuracy": [
+        0.9679999947547913
+      ]
+    }
+  },
+  "metrics": {
+    "fold_0": {
+      "accuracy_score": 0.9650447368421052,
+      "confusion_matrix": {
+        "TN": 184949,
+        "FP": 5075,
+        "FN": 8208,
+        "TP": 181768
+      },
+      "f1_score": 0.9647496543433319,
+      "matthews_corrcoef": 0.9302158001952564,
+      "roc_auc_score": 0.9885237168806
+    },
+    "fold_1": {
+      "accuracy_score": 0.9614815789473684,
+      "confusion_matrix": {
+        "TN": 187243,
+        "FP": 2440,
+        "FN": 12197,
+        "TP": 178120
+      },
+      "f1_score": 0.9605340854245479,
+      "matthews_corrcoef": 0.9241887311549255,
+      "roc_auc_score": 0.9830772978242267
+    },
+    "fold_2": {
+      "accuracy_score": 0.9691842105263158,
+      "confusion_matrix": {
+        "TN": 188555,
+        "FP": 1662,
+        "FN": 10048,
+        "TP": 179735
+      },
+      "f1_score": 0.9684519640066813,
+      "matthews_corrcoef": 0.9392806623701437,
+      "roc_auc_score": 0.9892972733523353
+    },
+    "fold_3": {
+      "accuracy_score": 0.9661394736842105,
+      "confusion_matrix": {
+        "TN": 186921,
+        "FP": 3684,
+        "FN": 9183,
+        "TP": 180212
+      },
+      "f1_score": 0.9655309128802998,
+      "matthews_corrcoef": 0.9326628011804685,
+      "roc_auc_score": 0.9884876002402737
+    },
+    "fold_4": {
+      "accuracy_score": 0.968,
+      "confusion_matrix": {
+        "TN": 187017,
+        "FP": 2513,
+        "FN": 9647,
+        "TP": 180823
+      },
+      "f1_score": 0.9674697570397479,
+      "matthews_corrcoef": 0.9366659285700595,
+      "roc_auc_score": 0.9884095240488605
+    }
+  }
+}
