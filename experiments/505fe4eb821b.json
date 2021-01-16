@@ -1,0 +1,114 @@
+{
+  "loss": "mse",
+  "optimizer": "{'name': 'Adam', 'learning_rate': 1e-05, 'decay': 0.0, 'beta_1': 0.9, 'beta_2': 0.999, 'epsilon': 1e-07, 'amsgrad': False}",
+  "experiment_config": {
+    "fit_args": {
+      "batch_size": 64,
+      "epochs": 1,
+      "verbose": 2
+    },
+    "kfold_args": {
+      "n_splits": 5,
+      "shuffle": true
+    },
+    "path_args": {
+      "repo_root": "/shared/users/geirtul/git/master/master_analysis/",
+      "models": "/shared/users/geirtul/git/master/master_analysis/models/",
+      "figures": "/shared/users/geirtul/git/master/master_analysis/figures/",
+      "experiments": "/shared/users/geirtul/git/master/master_analysis/experiments/",
+      "results": "/shared/users/geirtul/git/master/master_analysis/results",
+      "model_config": "/shared/users/geirtul/git/master/master_analysis/experiments/model_config/"
+    },
+    "random_seed": 120,
+    "data": {
+      "images": "images_full_pixelmod.npy",
+      "labels": "labels_full.npy",
+      "positions": "positions_full.npy",
+      "energies": "energies_full.npy"
+    },
+    "compile_args": {
+      "adam_lr": 1e-05,
+      "loss": "mse",
+      "metrics": null
+    },
+    "scaling": "minmax"
+  },
+  "model_type": "regression",
+  "experiment_name": "results_energies_double_pretrained_finetune",
+  "experiment_id": "505fe4eb821b",
+  "datetime": "2021-01-16 00:16:03",
+  "history": {
+    "fold_0": {
+      "loss": [
+        0.04537328705191612
+      ],
+      "val_loss": [
+        0.042319152504205704
+      ]
+    },
+    "fold_1": {
+      "loss": [
+        0.045363638550043106
+      ],
+      "val_loss": [
+        0.04302167519927025
+      ]
+    },
+    "fold_2": {
+      "loss": [
+        0.045034755021333694
+      ],
+      "val_loss": [
+        0.04335855320096016
+      ]
+    },
+    "fold_3": {
+      "loss": [
+        0.04518232122063637
+      ],
+      "val_loss": [
+        0.042630430310964584
+      ]
+    },
+    "fold_4": {
+      "loss": [
+        0.04889458045363426
+      ],
+      "val_loss": [
+        0.042706508189439774
+      ]
+    }
+  },
+  "metrics": {
+    "fold_0": {
+      "r2_score": 0.4918391015712294,
+      "mse": 0.04231914341122482,
+      "rmse": 0.20571615848185992,
+      "mae": 0.16769638209399787
+    },
+    "fold_1": {
+      "r2_score": 0.48331228561346784,
+      "mse": 0.04302170440133539,
+      "rmse": 0.20741567348361106,
+      "mae": 0.1693868505852079
+    },
+    "fold_2": {
+      "r2_score": 0.48040334942130153,
+      "mse": 0.04335853280467924,
+      "rmse": 0.2082269825666837,
+      "mae": 0.16979028631525014
+    },
+    "fold_3": {
+      "r2_score": 0.4885480321961046,
+      "mse": 0.04263037401576927,
+      "rmse": 0.2064705687052984,
+      "mae": 0.1682279005698032
+    },
+    "fold_4": {
+      "r2_score": 0.48766602654228375,
+      "mse": 0.04270651677201426,
+      "rmse": 0.20665548843139508,
+      "mae": 0.16879752120122868
+    }
+  }
+}
