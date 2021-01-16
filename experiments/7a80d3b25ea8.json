@@ -1,0 +1,114 @@
+{
+  "loss": "mse",
+  "optimizer": "{'name': 'Adam', 'learning_rate': 1e-05, 'decay': 0.0, 'beta_1': 0.9, 'beta_2': 0.999, 'epsilon': 1e-07, 'amsgrad': False}",
+  "experiment_config": {
+    "fit_args": {
+      "batch_size": 64,
+      "epochs": 1,
+      "verbose": 2
+    },
+    "kfold_args": {
+      "n_splits": 5,
+      "shuffle": true
+    },
+    "path_args": {
+      "repo_root": "/shared/users/geirtul/git/master/master_analysis/",
+      "models": "/shared/users/geirtul/git/master/master_analysis/models/",
+      "figures": "/shared/users/geirtul/git/master/master_analysis/figures/",
+      "experiments": "/shared/users/geirtul/git/master/master_analysis/experiments/",
+      "results": "/shared/users/geirtul/git/master/master_analysis/results",
+      "model_config": "/shared/users/geirtul/git/master/master_analysis/experiments/model_config/"
+    },
+    "random_seed": 120,
+    "data": {
+      "images": "images_full_pixelmod_imbalanced.npy",
+      "labels": "labels_full_pixelmod_imbalanced.npy",
+      "positions": "positions_full_pixelmod_imbalanced.npy",
+      "energies": "energies_full_pixelmod_imbalanced.npy"
+    },
+    "compile_args": {
+      "adam_lr": 1e-05,
+      "loss": "mse",
+      "metrics": null
+    },
+    "scaling": "minmax"
+  },
+  "model_type": "regression",
+  "experiment_name": "results_energies_double_pretrained_finetune",
+  "experiment_id": "7a80d3b25ea8",
+  "datetime": "2021-01-16 07:18:26",
+  "history": {
+    "fold_0": {
+      "loss": [
+        0.09886021167039871
+      ],
+      "val_loss": [
+        0.045269675552845
+      ]
+    },
+    "fold_1": {
+      "loss": [
+        0.09743578732013702
+      ],
+      "val_loss": [
+        0.05256000906229019
+      ]
+    },
+    "fold_2": {
+      "loss": [
+        0.09303606301546097
+      ],
+      "val_loss": [
+        0.04660186916589737
+      ]
+    },
+    "fold_3": {
+      "loss": [
+        0.0936829000711441
+      ],
+      "val_loss": [
+        0.050064440816640854
+      ]
+    },
+    "fold_4": {
+      "loss": [
+        0.11145445704460144
+      ],
+      "val_loss": [
+        0.045520100742578506
+      ]
+    }
+  },
+  "metrics": {
+    "fold_0": {
+      "r2_score": 0.45809296853463755,
+      "mse": 0.04526966569222112,
+      "rmse": 0.2127610812744803,
+      "mae": 0.17093913143407904
+    },
+    "fold_1": {
+      "r2_score": 0.3684907159036002,
+      "mse": 0.05255999635724711,
+      "rmse": 0.22920074559481163,
+      "mae": 0.18027137045745023
+    },
+    "fold_2": {
+      "r2_score": 0.44263018218888966,
+      "mse": 0.04660187501171771,
+      "rmse": 0.21587346757757547,
+      "mae": 0.173238517119435
+    },
+    "fold_3": {
+      "r2_score": 0.3997259363917524,
+      "mse": 0.05006443555759189,
+      "rmse": 0.22375082371910737,
+      "mae": 0.17649365825368446
+    },
+    "fold_4": {
+      "r2_score": 0.45235909352760234,
+      "mse": 0.04552011370921877,
+      "rmse": 0.21335155518752977,
+      "mae": 0.1742962386249724
+    }
+  }
+}
