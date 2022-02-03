@@ -1,0 +1,18 @@
+cp results_experiment_config_nomod.json results_experiment_config.json
+python full_training_logistic.py
+python full_training_dense.py
+python full_training_cnn.py
+python full_training_custom.py
+python full_training_pretrained.py
+cp results_experiment_config_pixelmod.json results_experiment_config.json
+python full_training_logistic.py
+python full_training_dense.py
+python full_training_cnn.py
+python full_training_custom.py
+python full_training_pretrained.py
+cp results_experiment_config_imbalanced.json results_experiment_config.json
+python full_training_logistic.py
+python full_training_dense.py
+python full_training_cnn.py
+python full_training_custom.py
+python full_training_pretrained.py

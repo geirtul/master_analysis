@@ -1,0 +1,61 @@
+{
+  "loss": "binary_crossentropy",
+  "optimizer": "{'name': 'Adam', 'learning_rate': 0.001, 'decay': 0.0, 'beta_1': 0.9, 'beta_2': 0.999, 'epsilon': 1e-07, 'amsgrad': False}",
+  "experiment_config": {
+    "fit_args": {
+      "batch_size": 64,
+      "epochs": 1,
+      "verbose": 1
+    },
+    "kfold_args": {
+      "n_splits": 5,
+      "shuffle": true
+    },
+    "path_args": {
+      "repo_root": "/shared/users/geirtul/git/master/master_analysis/",
+      "models": "/shared/users/geirtul/git/master/master_analysis/models/",
+      "figures": "/shared/users/geirtul/git/master/master_analysis/figures/",
+      "experiments": "/shared/users/geirtul/git/master/master_analysis/experiments/",
+      "results": "/shared/users/geirtul/git/master/master_analysis/results",
+      "model_config": "/shared/users/geirtul/git/master/master_analysis/experiments/model_config/"
+    },
+    "random_seed": 120,
+    "data": {
+      "images": "images_full_pixelmod.npy",
+      "labels": "labels_full.npy",
+      "positions": "positions_full.npy",
+      "energies": "energies_full.npy"
+    },
+    "scaling": "minmax"
+  },
+  "model_type": "classification",
+  "experiment_name": "full_training_pretrained_vgg16_fine_tuning_dense",
+  "experiment_id": "210dd6fec5f5",
+  "datetime": "2021-01-10 17:17:47",
+  "history": {
+    "loss": [
+      0.10950460284948349
+    ],
+    "accuracy": [
+      0.9668778777122498
+    ],
+    "val_loss": [
+      0.08132337778806686
+    ],
+    "val_accuracy": [
+      0.9793283939361572
+    ]
+  },
+  "metrics": {
+    "accuracy_score": 0.9793284210526316,
+    "confusion_matrix": {
+      "TN": 235460,
+      "FP": 2072,
+      "FN": 7747,
+      "TP": 229721
+    },
+    "f1_score": 0.9790756103746102,
+    "matthews_corrcoef": 0.9589305038463667,
+    "roc_auc_score": 0.9899867652830396
+  }
+}
