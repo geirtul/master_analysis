@@ -22,7 +22,7 @@ Markdown==3.1.1
 -e git+git@github.com:geirtul/master_scripts.git@86148d342662ef10a37f661c8743e728e007a18c#egg=master_data_functions&subdirectory=data_functions
 -e git+git@github.com:geirtul/master_scripts.git@86148d342662ef10a37f661c8743e728e007a18c#egg=master_models&subdirectory=models
 matplotlib==3.1.1
-numpy==1.21.0
+numpy==1.22.0
 parso==0.5.1
 pexpect==4.7.0
 pickleshare==0.7.5
