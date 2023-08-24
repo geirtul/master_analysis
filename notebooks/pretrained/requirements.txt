@@ -30,7 +30,7 @@ pkg-resources==0.0.0
 prompt-toolkit==2.0.9
 protobuf==3.18.3
 ptyprocess==0.6.0
-Pygments==2.7.4
+Pygments==2.15.0
 pyparsing==2.4.2
 python-dateutil==2.8.0
 PyYAML==5.4
