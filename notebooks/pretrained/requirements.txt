@@ -48,5 +48,5 @@ tf-estimator-nightly==1.14.0.dev2019060501
 tornado==6.3.3
 traitlets==4.3.2
 wcwidth==0.1.7
-Werkzeug==2.2.3
+Werkzeug==3.0.1
 wrapt==1.11.2
