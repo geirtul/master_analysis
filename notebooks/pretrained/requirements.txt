@@ -45,7 +45,7 @@ tensorflow-estimator==1.14.0
 tensorflow-gpu==2.12.0
 termcolor==1.1.0
 tf-estimator-nightly==1.14.0.dev2019060501
-tornado==6.3.3
+tornado==6.4.1
 traitlets==4.3.2
 wcwidth==0.1.7
 Werkzeug==3.0.1
